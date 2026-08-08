@@ -1,0 +1,115 @@
+{
+    "key": "sg90",
+    "kind": "actuator",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "SG90 Micro Servo",
+        "description": "180 degree micro servo motor. PWM controlled. 4.8V-6V operating voltage. Used for small positional control tasks.",
+        "actuator_type": "servo",
+        "protocol": "pwm",
+        "manufacturer": "Tower Pro",
+        "model_number": "SG90",
+        "datasheet_url": null,
+        "command_topic_suffix": "command/position",
+        "response_topic_suffix": "response/position",
+        "states": [
+            {
+                "command": "SET_ANGLE",
+                "label": "Set Angle",
+                "description": "Set servo position to a specific angle 0-180 degrees. Payload: integer angle value",
+                "payload": "{\"angle\": 90}",
+                "sort_order": 1,
+                "parameter": {
+                    "name": "angle",
+                    "data_type": "integer",
+                    "unit_symbol": "°",
+                    "range_min": 0,
+                    "range_max": 180,
+                    "required": true
+                }
+            },
+            {
+                "command": "CENTER",
+                "label": "Center",
+                "description": "Move servo to center position (90 degrees)",
+                "payload": "CENTER",
+                "sort_order": 2,
+                "parameter": null
+            },
+            {
+                "command": "MIN",
+                "label": "Minimum",
+                "description": "Move servo to minimum position (0 degrees)",
+                "payload": "MIN",
+                "sort_order": 3,
+                "parameter": null
+            },
+            {
+                "command": "MAX",
+                "label": "Maximum",
+                "description": "Move servo to maximum position (180 degrees)",
+                "payload": "MAX",
+                "sort_order": 4,
+                "parameter": null
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "sg90"
+        ],
+        "device_class": "servo"
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "pwm",
+        "connection": {
+            "pins": [
+                {
+                    "role": "signal",
+                    "required": true,
+                    "notes": "50Hz control pulse."
+                }
+            ],
+            "supply_voltage": "5V",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.servo",
+            "pip_packages": [
+                "adafruit-circuitpython-motor",
+                "rpi-lgpio"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "adafruit_motor.servo.Servo",
+                "args": {
+                    "pwm_out": "{pwm_channel}",
+                    "min_pulse": 500,
+                    "max_pulse": 2400
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": null,
+            "read_timeout_seconds": null,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Pulse width limits vary between units and clones. Commanding the full nominal range drives many units into their end stops, where they stall and draw heavily.",
+            "A stalled servo draws several hundred milliamps and will brown out a Raspberry Pi sharing the 5V rail. Use a separate supply with grounds tied.",
+            "There is no position feedback. The commanded angle is not confirmation that the horn reached it.",
+            "Software PWM jitter makes the horn buzz and hunt around the setpoint."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

@@ -1,0 +1,171 @@
+{
+    "key": "mpu-6050",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "MPU-6050 6-Axis IMU",
+        "description": "3-axis gyroscope and 3-axis accelerometer over I2C. Used for orientation, vibration detection and fall detection.",
+        "sensor_type": "motion",
+        "protocol": "i2c",
+        "manufacturer": "InvenSense (TDK)",
+        "model_number": "MPU-6050",
+        "datasheet_url": "https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf",
+        "read_interval_seconds": 10,
+        "readings": [
+            {
+                "slug": "accel-x",
+                "device_class": null,
+                "label": "Acceleration X",
+                "unit": "metres per second squared",
+                "unit_symbol": "m/s²",
+                "data_type": "float",
+                "range_min": -16,
+                "range_max": 16,
+                "decimal_places": 3,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            },
+            {
+                "slug": "accel-y",
+                "device_class": null,
+                "label": "Acceleration Y",
+                "unit": "metres per second squared",
+                "unit_symbol": "m/s²",
+                "data_type": "float",
+                "range_min": -16,
+                "range_max": 16,
+                "decimal_places": 3,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            },
+            {
+                "slug": "accel-z",
+                "device_class": null,
+                "label": "Acceleration Z",
+                "unit": "metres per second squared",
+                "unit_symbol": "m/s²",
+                "data_type": "float",
+                "range_min": -16,
+                "range_max": 16,
+                "decimal_places": 3,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            },
+            {
+                "slug": "gyro-x",
+                "device_class": null,
+                "label": "Gyroscope X",
+                "unit": "degrees per second",
+                "unit_symbol": "°/s",
+                "data_type": "float",
+                "range_min": -2000,
+                "range_max": 2000,
+                "decimal_places": 2,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            },
+            {
+                "slug": "gyro-y",
+                "device_class": null,
+                "label": "Gyroscope Y",
+                "unit": "degrees per second",
+                "unit_symbol": "°/s",
+                "data_type": "float",
+                "range_min": -2000,
+                "range_max": 2000,
+                "decimal_places": 2,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            },
+            {
+                "slug": "gyro-z",
+                "device_class": null,
+                "label": "Gyroscope Z",
+                "unit": "degrees per second",
+                "unit_symbol": "°/s",
+                "data_type": "float",
+                "range_min": -2000,
+                "range_max": 2000,
+                "decimal_places": 2,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "mpu-6050"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "i2c",
+        "connection": {
+            "pins": [
+                {
+                    "role": "sda",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "scl",
+                    "required": true,
+                    "notes": null
+                }
+            ],
+            "supply_voltage": "3.3V",
+            "i2c_addresses": [
+                "0x68",
+                "0x69"
+            ],
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.mpu6050",
+            "pip_packages": [
+                "adafruit-circuitpython-mpu6050"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "adafruit_mpu6050.MPU6050",
+                "args": {
+                    "i2c": "board.I2C()",
+                    "address": "{i2c_address}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 0.1,
+            "read_timeout_seconds": 2,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Address is 0x68 with AD0 low and 0x69 with AD0 high.",
+            "Gyroscope output drifts and has a non-zero bias at rest. Bias must be measured while stationary at startup and subtracted.",
+            "Accelerometer readings include gravity. A stationary sensor reads approximately 9.81 on whichever axis points down, which is not motion.",
+            "The part is obsolete and widely cloned. Clone modules vary in noise and in whether the temperature channel is usable."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

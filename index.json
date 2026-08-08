@@ -1,0 +1,199 @@
+{
+    "schema_version": 1,
+    "registry_version": "0.1.0",
+    "boards": [
+        {
+            "key": "raspberry-pi-5-8gb",
+            "name": "Raspberry Pi 5 8GB",
+            "board_type": "Single Board Computer",
+            "provisioning_model": "linux-agent",
+            "status": "draft"
+        },
+        {
+            "key": "raspberry-pi-5-16gb",
+            "name": "Raspberry Pi 5 16GB",
+            "board_type": "Single Board Computer",
+            "provisioning_model": "linux-agent",
+            "status": "draft"
+        },
+        {
+            "key": "arduino-uno-q-4gb",
+            "name": "Arduino UNO Q 4GB",
+            "board_type": "Single Board Computer / Microcontroller Hybrid",
+            "provisioning_model": "linux-agent",
+            "status": "draft"
+        },
+        {
+            "key": "nvidia-jetson-orin-nano-super",
+            "name": "NVIDIA JETSON Orin Nano Super",
+            "board_type": "AI / Edge Computing",
+            "provisioning_model": "linux-agent",
+            "status": "draft"
+        },
+        {
+            "key": "arduino-portenta-h7",
+            "name": "Arduino® Portenta H7",
+            "board_type": "Single Board Computer / Microcontroller Hybrid",
+            "provisioning_model": "firmware",
+            "status": "unsupported"
+        },
+        {
+            "key": "arduino-nicla-vision",
+            "name": "Arduino® Nicla Vision",
+            "board_type": "AI / Edge Computing",
+            "provisioning_model": "firmware",
+            "status": "unsupported"
+        },
+        {
+            "key": "arduino-nicla-voice",
+            "name": "Arduino® Nicla Voice",
+            "board_type": "AI / Edge Computing",
+            "provisioning_model": "firmware",
+            "status": "unsupported"
+        },
+        {
+            "key": "arduino-nano-matter",
+            "name": "Arduino® Nano Matter",
+            "board_type": "Microcontroller",
+            "provisioning_model": "firmware",
+            "status": "unsupported"
+        },
+        {
+            "key": "khadas-mind-2",
+            "name": "Khadas Mind 2",
+            "board_type": "AI / Edge Computing",
+            "provisioning_model": "linux-agent",
+            "status": "draft"
+        }
+    ],
+    "sensors": [
+        {
+            "key": "dht22",
+            "name": "DHT22 Temperature & Humidity Sensor",
+            "protocol": "1wire",
+            "status": "draft"
+        },
+        {
+            "key": "bme280",
+            "name": "BME280 Environmental Sensor",
+            "protocol": "i2c",
+            "status": "draft"
+        },
+        {
+            "key": "scd41",
+            "name": "SCD41 CO2 Sensor",
+            "protocol": "i2c",
+            "status": "draft"
+        },
+        {
+            "key": "sen0554",
+            "name": "DFRobot UART Non-contact Optical Turbidity Sensor",
+            "protocol": "uart",
+            "status": "unverified"
+        },
+        {
+            "key": "bh1750",
+            "name": "BH1750 Ambient Light Sensor",
+            "protocol": "i2c",
+            "status": "draft"
+        },
+        {
+            "key": "hc-sr04",
+            "name": "HC-SR04 Ultrasonic Distance Sensor",
+            "protocol": "gpio",
+            "status": "draft"
+        },
+        {
+            "key": "wav-25515",
+            "name": "Waveshare Round 2D Barcode / QR Scanner",
+            "protocol": "uart",
+            "status": "unverified"
+        },
+        {
+            "key": "mfrc522",
+            "name": "MFRC522 RFID Reader",
+            "protocol": "spi",
+            "status": "draft"
+        },
+        {
+            "key": "hc-sr501",
+            "name": "HC-SR501 PIR Motion Sensor",
+            "protocol": "gpio",
+            "status": "draft"
+        },
+        {
+            "key": "mpu-6050",
+            "name": "MPU-6050 6-Axis IMU",
+            "protocol": "i2c",
+            "status": "draft"
+        },
+        {
+            "key": "yf-s201",
+            "name": "YF-S201 Water Flow Sensor",
+            "protocol": "gpio",
+            "status": "draft"
+        },
+        {
+            "key": "hc-sr04-level",
+            "name": "HC-SR04 Liquid Level (Ultrasonic)",
+            "protocol": "gpio",
+            "status": "draft"
+        },
+        {
+            "key": "neo-6m",
+            "name": "u-blox NEO-6M GPS Module",
+            "protocol": "uart",
+            "status": "draft"
+        },
+        {
+            "key": "max9814",
+            "name": "MAX9814 Microphone Sound Level",
+            "protocol": "analog",
+            "status": "draft"
+        },
+        {
+            "key": "mlx90614",
+            "name": "MLX90614 IR Non-contact Thermometer",
+            "protocol": "i2c",
+            "status": "draft"
+        },
+        {
+            "key": "hx711",
+            "name": "HX711 Load Cell Amplifier",
+            "protocol": "gpio",
+            "status": "draft"
+        }
+    ],
+    "actuators": [
+        {
+            "key": "sg90",
+            "name": "SG90 Micro Servo",
+            "protocol": "pwm",
+            "status": "draft"
+        },
+        {
+            "key": "ws2812b",
+            "name": "WS2812B RGB LED Strip",
+            "protocol": "gpio",
+            "status": "draft"
+        },
+        {
+            "key": "buzzer-passive",
+            "name": "Passive Buzzer Module",
+            "protocol": "pwm",
+            "status": "draft"
+        },
+        {
+            "key": "buzzer-active",
+            "name": "Active Buzzer Module",
+            "protocol": "gpio",
+            "status": "draft"
+        },
+        {
+            "key": "pump-5v-mini",
+            "name": "5V Mini Submersible Water Pump",
+            "protocol": "gpio",
+            "status": "draft"
+        }
+    ]
+}

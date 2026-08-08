@@ -1,0 +1,99 @@
+{
+    "key": "max9814",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "MAX9814 Microphone Sound Level",
+        "description": "Electret microphone with automatic gain control. Analog output converted to dB SPL approximation via ADC.",
+        "sensor_type": "acoustic",
+        "protocol": "analog",
+        "manufacturer": "Maxim Integrated",
+        "model_number": "MAX9814",
+        "datasheet_url": "https://datasheets.maximintegrated.com/en/ds/MAX9814.pdf",
+        "read_interval_seconds": 5,
+        "readings": [
+            {
+                "slug": "sound-level",
+                "device_class": "sound_pressure",
+                "label": "Sound Level",
+                "unit": "decibels",
+                "unit_symbol": "dB",
+                "data_type": "float",
+                "range_min": 40,
+                "range_max": 120,
+                "decimal_places": 1,
+                "threshold_warn_low": null,
+                "threshold_warn_high": 85,
+                "threshold_crit_low": null,
+                "threshold_crit_high": 100
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "max9814"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "analog",
+        "connection": {
+            "pins": [
+                {
+                    "role": "out",
+                    "required": true,
+                    "notes": "Analog audio output centred on a DC bias. The Raspberry Pi has no ADC, so an external converter is mandatory."
+                },
+                {
+                    "role": "gain",
+                    "required": false,
+                    "notes": "Floating selects 60dB, tied to ground 50dB, tied to supply 40dB."
+                },
+                {
+                    "role": "ar",
+                    "required": false,
+                    "notes": "Sets the automatic gain control attack and release ratio."
+                }
+            ],
+            "supply_voltage": "3.3V or 5V",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.max9814",
+            "pip_packages": [
+                "adafruit-circuitpython-ads1x15"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "drivers.max9814.MAX9814",
+                "args": {
+                    "adc_channel": "{adc_channel}",
+                    "adc_address": "{adc_address}",
+                    "reference_offset_db": "{calibration_offset_db}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 1,
+            "read_timeout_seconds": 2,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "The Raspberry Pi has no analog input. This part cannot be connected without an external ADC, which is a separate component and must be declared.",
+            "The output is an audio waveform, not a level. A sound level requires sampling a window and computing RMS. A single ADC reading returns an arbitrary point on the waveform and is meaningless.",
+            "An ADS1115 at its maximum sample rate is far below audio bandwidth. It can track a slow envelope but cannot reconstruct the signal, so the derived level is an approximation of loudness only.",
+            "Automatic gain control continuously changes the amplifier gain, so absolute amplitude does not correspond to absolute sound pressure. Comparisons across time are only valid while the AGC is not moving.",
+            "Decibel output requires calibration against a reference meter per installation. Without that constant the published value is relative, not sound pressure level."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

@@ -1,0 +1,125 @@
+{
+    "key": "bme280",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "BME280 Environmental Sensor",
+        "description": "Combined digital humidity, pressure and temperature sensor over I2C or SPI. Used for weather stations and indoor air quality monitoring.",
+        "sensor_type": "environmental",
+        "protocol": "i2c",
+        "manufacturer": "Bosch Sensortec",
+        "model_number": "BME280",
+        "datasheet_url": "https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme280-ds002.pdf",
+        "read_interval_seconds": 60,
+        "readings": [
+            {
+                "slug": "temperature",
+                "device_class": "temperature",
+                "label": "Temperature",
+                "unit": "degrees celsius",
+                "unit_symbol": "°C",
+                "data_type": "float",
+                "range_min": -40,
+                "range_max": 85,
+                "decimal_places": 2,
+                "threshold_warn_low": 10,
+                "threshold_warn_high": 30,
+                "threshold_crit_low": 0,
+                "threshold_crit_high": 40
+            },
+            {
+                "slug": "humidity",
+                "device_class": "humidity",
+                "label": "Relative Humidity",
+                "unit": "percent",
+                "unit_symbol": "%",
+                "data_type": "float",
+                "range_min": 0,
+                "range_max": 100,
+                "decimal_places": 2,
+                "threshold_warn_low": 30,
+                "threshold_warn_high": 70,
+                "threshold_crit_low": 20,
+                "threshold_crit_high": 85
+            },
+            {
+                "slug": "pressure",
+                "device_class": "atmospheric_pressure",
+                "label": "Barometric Pressure",
+                "unit": "hectopascal",
+                "unit_symbol": "hPa",
+                "data_type": "float",
+                "range_min": 300,
+                "range_max": 1100,
+                "decimal_places": 2,
+                "threshold_warn_low": 970,
+                "threshold_warn_high": 1030,
+                "threshold_crit_low": 950,
+                "threshold_crit_high": 1050
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "bme280"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "i2c",
+        "connection": {
+            "pins": [
+                {
+                    "role": "sda",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "scl",
+                    "required": true,
+                    "notes": null
+                }
+            ],
+            "supply_voltage": "3.3V",
+            "i2c_addresses": [
+                "0x76",
+                "0x77"
+            ],
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.bme280",
+            "pip_packages": [
+                "adafruit-circuitpython-bme280"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "adafruit_bme280.basic.Adafruit_BME280_I2C",
+                "args": {
+                    "i2c": "board.I2C()",
+                    "address": "{i2c_address}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 1,
+            "read_timeout_seconds": 2,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Shares addresses 0x76 and 0x77 with the BMP280, which has no humidity channel. Read chip id register 0xD0 before trusting the part: 0x60 is a BME280, 0x58 is a BMP280.",
+            "Many breakout boards sold as BME280 carry a BMP280. If humidity reads as absent the part is a BMP280 and the humidity reading must not be published.",
+            "Self-heating raises the reported temperature above ambient when sampled continuously. Use forced mode or a slow interval where accuracy matters."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

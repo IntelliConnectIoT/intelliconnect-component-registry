@@ -1,0 +1,128 @@
+{
+    "key": "neo-6m",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "u-blox NEO-6M GPS Module",
+        "description": "UART GPS/GNSS receiver. Outputs NMEA sentences with latitude, longitude, altitude, speed and heading.",
+        "sensor_type": "position",
+        "protocol": "uart",
+        "manufacturer": "u-blox",
+        "model_number": "NEO-6M",
+        "datasheet_url": "https://www.u-blox.com/sites/default/files/products/documents/NEO-6_DataSheet_(GPS.G6-HW-09005).pdf",
+        "read_interval_seconds": 1,
+        "readings": [
+            {
+                "slug": "latitude",
+                "device_class": null,
+                "label": "Latitude",
+                "unit": "decimal degrees",
+                "unit_symbol": "°",
+                "data_type": "float",
+                "range_min": -90,
+                "range_max": 90,
+                "decimal_places": 6,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            },
+            {
+                "slug": "longitude",
+                "device_class": null,
+                "label": "Longitude",
+                "unit": "decimal degrees",
+                "unit_symbol": "°",
+                "data_type": "float",
+                "range_min": -180,
+                "range_max": 180,
+                "decimal_places": 6,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            },
+            {
+                "slug": "speed",
+                "device_class": "speed",
+                "label": "Speed",
+                "unit": "kilometres per hour",
+                "unit_symbol": "km/h",
+                "data_type": "float",
+                "range_min": 0,
+                "range_max": 999,
+                "decimal_places": 1,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "neo-6m"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "uart",
+        "connection": {
+            "pins": [
+                {
+                    "role": "tx",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "rx",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "pps",
+                    "required": false,
+                    "notes": "Pulse per second output. Optional, used for time discipline."
+                }
+            ],
+            "supply_voltage": "3.3V or 5V",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.neo6m",
+            "pip_packages": [
+                "pyserial",
+                "pynmea2"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "drivers.neo6m.NEO6M",
+                "args": {
+                    "port": "{serial_port}",
+                    "baudrate": 9600
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 1,
+            "read_timeout_seconds": 5,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Emits NMEA sentences continuously. Sentences must be parsed and validity flagged, because the module reports a position before it has a fix.",
+            "A cold start needs several minutes of clear sky view. Indoors it will never fix and will emit valid-looking sentences with the void status flag set.",
+            "Latitude and longitude in NMEA are degrees and decimal minutes, not decimal degrees. Publishing the raw field without conversion produces a position that is wrong by a predictable but large amount.",
+            "On a Raspberry Pi the primary UART is shared with the serial console, which must be disabled before the port is usable."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

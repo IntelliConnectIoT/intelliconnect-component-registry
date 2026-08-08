@@ -1,0 +1,41 @@
+{
+    "key": "sen0554",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "unverified",
+    "source": "platform-seed",
+    "platform": {
+        "name": "DFRobot UART Non-contact Optical Turbidity Sensor",
+        "description": "Non-contact optical turbidity sensor. Mounts externally on a transparent cylindrical container and measures liquid turbidity without contact with the fluid.",
+        "sensor_type": "optical",
+        "protocol": "uart",
+        "manufacturer": "DFRobot",
+        "model_number": "SEN0554",
+        "datasheet_url": "https://wiki.dfrobot.com/SKU_SEN0554",
+        "read_interval_seconds": 60,
+        "readings": [
+            {
+                "slug": "turbidity",
+                "device_class": null,
+                "label": "Turbidity",
+                "unit": "nephelometric turbidity units",
+                "unit_symbol": "NTU",
+                "data_type": "float",
+                "range_min": 0,
+                "range_max": 4000,
+                "decimal_places": 1,
+                "threshold_warn_low": null,
+                "threshold_warn_high": 100,
+                "threshold_crit_low": null,
+                "threshold_crit_high": 500
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "sen0554"
+        ]
+    },
+    "driver": null,
+    "blocked_reason": "Turbidity module with a documented UART interface, but the command set and the raw-to-NTU conversion could not be confirmed from a primary source."
+}

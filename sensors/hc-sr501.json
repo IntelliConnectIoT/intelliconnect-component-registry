@@ -1,0 +1,89 @@
+{
+    "key": "hc-sr501",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "HC-SR501 PIR Motion Sensor",
+        "description": "Passive infrared sensor for motion detection. Digital high/low output. Adjustable sensitivity and delay time.",
+        "sensor_type": "motion",
+        "protocol": "gpio",
+        "manufacturer": null,
+        "model_number": "HC-SR501",
+        "datasheet_url": null,
+        "read_interval_seconds": 1,
+        "readings": [
+            {
+                "slug": "motion-detected",
+                "device_class": "motion",
+                "label": "Motion Detected",
+                "unit": null,
+                "unit_symbol": null,
+                "data_type": "boolean",
+                "range_min": 0,
+                "range_max": 1,
+                "decimal_places": 0,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "hc-sr501"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "gpio-digital",
+        "connection": {
+            "pins": [
+                {
+                    "role": "out",
+                    "required": true,
+                    "notes": "Push-pull 3.3V output. Safe on a Raspberry Pi GPIO input."
+                }
+            ],
+            "supply_voltage": "5V",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.hcsr501",
+            "pip_packages": [
+                "gpiod"
+            ],
+            "apt_packages": [
+                "python3-libgpiod"
+            ],
+            "init": {
+                "class": "drivers.hcsr501.HCSR501",
+                "args": {
+                    "chip": "{gpio_chip}",
+                    "line": "{out_pin}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 0.1,
+            "read_timeout_seconds": 1,
+            "warmup_seconds": 60
+        },
+        "failure_modes": [
+            "Requires roughly 60 seconds after power on to stabilise. Output is unreliable and often latched high during that window.",
+            "On-board potentiometers set sensitivity and hold time in hardware. Two physically identical modules will behave differently unless both pots are matched.",
+            "Hold time means the output stays high for a fixed period after the last detection. Edge counting during that window measures nothing.",
+            "Triggers on moving heat, not on people. Sunlight through glass, heating pipes and pets all register."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

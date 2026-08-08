@@ -1,0 +1,111 @@
+{
+    "key": "arduino-nicla-vision",
+    "kind": "board",
+    "revision": 1,
+    "status": "unsupported",
+    "source": "platform-seed",
+    "platform": {
+        "name": "Arduino® Nicla Vision",
+        "description": "Edge AI vision board with 2MP camera.",
+        "board_type": "AI / Edge Computing",
+        "manufacturer": "Arduino",
+        "model_number": "ABX00051",
+        "datasheet_url": null,
+        "cpu": "STM32H747 Dual Core",
+        "ram": "1MB SRAM",
+        "storage": "2MB Flash",
+        "operating_voltage": "3.3V",
+        "gpio_pins": 10,
+        "pwm_channels": 2,
+        "adc_channels": 2,
+        "dac_channels": 0,
+        "dimensions_mm": "22.86 x 22.86",
+        "weight_g": 2,
+        "has_npu": false,
+        "has_gpu": true,
+        "has_tpu": false,
+        "operating_systems": [
+            {
+                "name": "Arduino IDE"
+            },
+            {
+                "name": "MicroPython"
+            }
+        ],
+        "communication_chips": [
+            {
+                "chip_model": "Murata 1DX",
+                "protocol": "Wi-Fi",
+                "standard": "802.11b/g/n"
+            },
+            {
+                "chip_model": "Murata 1DX",
+                "protocol": "Bluetooth",
+                "standard": "4.2"
+            }
+        ],
+        "serial_protocols": [
+            {
+                "protocol": "I2C",
+                "count": 1
+            },
+            {
+                "protocol": "SPI",
+                "count": 1
+            }
+        ],
+        "interfaces": [
+            {
+                "type": "Camera GC2145",
+                "count": 1
+            },
+            {
+                "type": "Micro USB",
+                "count": 1
+            }
+        ],
+        "power": [
+            {
+                "source": "Micro USB",
+                "voltage_min": 5,
+                "voltage_max": 5
+            }
+        ]
+    },
+    "harness": {
+        "provisioning_model": "firmware",
+        "component_attachment": "gpio-header",
+        "supported": false,
+        "blocked_reason": "Microcontroller class. No general purpose operating system, and insufficient memory to host Python and an MQTT client. Requires cross-compiled firmware built and flashed from a host machine.",
+        "runtime": {
+            "os_family": null,
+            "python3": false,
+            "package_manager": null,
+            "service_manager": null
+        },
+        "gpio": {
+            "library": null,
+            "pin_scheme": null,
+            "notes": "Pin access is compiled into the firmware image, not configured at runtime."
+        },
+        "probe": {
+            "model_file": null,
+            "overlay_file": null,
+            "commands": []
+        },
+        "local_inference": {
+            "viable": false,
+            "notes": "Insufficient memory for a general language model."
+        },
+        "toolchains": [
+            "Arduino IDE",
+            "MicroPython",
+            "OpenMV"
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "os": null
+        }
+    }
+}

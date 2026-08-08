@@ -1,0 +1,92 @@
+{
+    "key": "hc-sr04-level",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "HC-SR04 Liquid Level (Ultrasonic)",
+        "description": "Ultrasonic sensor repurposed for non-contact liquid level measurement in tanks. GPIO echo timing.",
+        "sensor_type": "fluid",
+        "protocol": "gpio",
+        "manufacturer": null,
+        "model_number": "HC-SR04-LEVEL",
+        "datasheet_url": null,
+        "read_interval_seconds": 30,
+        "readings": [
+            {
+                "slug": "level-percent",
+                "device_class": null,
+                "label": "Level",
+                "unit": "percent",
+                "unit_symbol": "%",
+                "data_type": "float",
+                "range_min": 0,
+                "range_max": 100,
+                "decimal_places": 1,
+                "threshold_warn_low": 20,
+                "threshold_warn_high": 95,
+                "threshold_crit_low": 10,
+                "threshold_crit_high": 100
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "hc-sr04-level"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "gpio-timing",
+        "connection": {
+            "pins": [
+                {
+                    "role": "trig",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "echo",
+                    "required": true,
+                    "notes": "Outputs 5V. Must be divided or level shifted to 3.3V before reaching a GPIO input."
+                }
+            ],
+            "supply_voltage": "5V",
+            "level_shift_required": "Required on echo"
+        },
+        "runtime": {
+            "python_module": "drivers.hcsr04",
+            "pip_packages": [
+                "adafruit-circuitpython-hcsr04"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "adafruit_hcsr04.HCSR04",
+                "args": {
+                    "trigger_pin": "board.D{trig_pin}",
+                    "echo_pin": "board.D{echo_pin}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 0.06,
+            "read_timeout_seconds": 1,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "The echo pin idles at 5V. Connecting it directly to a Raspberry Pi GPIO will damage the pin. A divider or level shifter is mandatory.",
+            "Level percent is derived from distance and requires the empty and full distances to be configured per installation. Without them the reading is meaningless.",
+            "Condensation on the transducer face in a tank headspace causes sustained misreads.",
+            "Foam and turbulent surfaces scatter the pulse and produce no echo."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

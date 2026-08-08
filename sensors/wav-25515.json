@@ -1,0 +1,41 @@
+{
+    "key": "wav-25515",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "unverified",
+    "source": "platform-seed",
+    "platform": {
+        "name": "Waveshare Round 2D Barcode / QR Scanner",
+        "description": "UART-connected 2D barcode and QR code scanner. Decodes 1D and 2D formats and outputs the decoded string.",
+        "sensor_type": "identity",
+        "protocol": "uart",
+        "manufacturer": "Waveshare",
+        "model_number": "WAV-25515",
+        "datasheet_url": "https://www.waveshare.com/wiki/Barcode_Scanner_Module",
+        "read_interval_seconds": 1,
+        "readings": [
+            {
+                "slug": "barcode",
+                "device_class": null,
+                "label": "Scanned Code",
+                "unit": null,
+                "unit_symbol": null,
+                "data_type": "string",
+                "range_min": null,
+                "range_max": null,
+                "decimal_places": null,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "wav-25515"
+        ]
+    },
+    "driver": null,
+    "blocked_reason": "Barcode module with a documented UART interface, but the framing, trigger command set and configuration barcodes could not be confirmed from a primary source."
+}

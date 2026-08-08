@@ -1,0 +1,95 @@
+{
+    "key": "bh1750",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "BH1750 Ambient Light Sensor",
+        "description": "Digital 16-bit ambient light sensor over I2C. Used for automatic lighting control and daylight harvesting.",
+        "sensor_type": "optical",
+        "protocol": "i2c",
+        "manufacturer": "ROHM Semiconductor",
+        "model_number": "BH1750",
+        "datasheet_url": "https://www.mouser.com/datasheet/2/348/bh1750fvi-e-186247.pdf",
+        "read_interval_seconds": 60,
+        "readings": [
+            {
+                "slug": "illuminance",
+                "device_class": "illuminance",
+                "label": "Illuminance",
+                "unit": "lux",
+                "unit_symbol": "lx",
+                "data_type": "float",
+                "range_min": 0,
+                "range_max": 65535,
+                "decimal_places": 0,
+                "threshold_warn_low": 100,
+                "threshold_warn_high": 10000,
+                "threshold_crit_low": 10,
+                "threshold_crit_high": 50000
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "bh1750"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "i2c",
+        "connection": {
+            "pins": [
+                {
+                    "role": "sda",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "scl",
+                    "required": true,
+                    "notes": null
+                }
+            ],
+            "supply_voltage": "3.3V",
+            "i2c_addresses": [
+                "0x23",
+                "0x5C"
+            ],
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.bh1750",
+            "pip_packages": [
+                "adafruit-circuitpython-bh1750"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "adafruit_bh1750.BH1750",
+                "args": {
+                    "i2c": "board.I2C()",
+                    "address": "{i2c_address}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 1,
+            "read_timeout_seconds": 2,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Address is 0x23 with ADDR low and 0x5C with ADDR high. A floating ADDR pin gives an unstable address.",
+            "High resolution mode needs roughly 120ms per conversion. Reading sooner returns the previous sample.",
+            "Saturates in direct sunlight. Readings at the top of the range are not trustworthy without an attenuating window."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

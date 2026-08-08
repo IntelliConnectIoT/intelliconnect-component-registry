@@ -1,0 +1,105 @@
+{
+    "key": "mfrc522",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "MFRC522 RFID Reader",
+        "description": "SPI RFID reader for 13.56 MHz Mifare cards and tags. Common in access control and asset tracking.",
+        "sensor_type": "identity",
+        "protocol": "spi",
+        "manufacturer": "NXP Semiconductors",
+        "model_number": "MFRC522",
+        "datasheet_url": "https://www.nxp.com/docs/en/data-sheet/MFRC522.pdf",
+        "read_interval_seconds": 1,
+        "readings": [
+            {
+                "slug": "uid",
+                "device_class": null,
+                "label": "Card UID",
+                "unit": null,
+                "unit_symbol": null,
+                "data_type": "string",
+                "range_min": null,
+                "range_max": null,
+                "decimal_places": null,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "mfrc522"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "spi",
+        "connection": {
+            "pins": [
+                {
+                    "role": "sck",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "mosi",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "miso",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "sda",
+                    "required": true,
+                    "notes": "Chip select."
+                },
+                {
+                    "role": "rst",
+                    "required": true,
+                    "notes": "Reset."
+                }
+            ],
+            "supply_voltage": "3.3V",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.mfrc522",
+            "pip_packages": [
+                "mfrc522",
+                "spidev"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "mfrc522.SimpleMFRC522",
+                "args": {}
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 0.2,
+            "read_timeout_seconds": 2,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "3.3V part. Applying 5V to the supply pin destroys it.",
+            "Reads MIFARE Classic. It does not read every 13.56MHz card, and NTAG or DESFire credentials will not enumerate with the common library.",
+            "Presenting no card is the normal state, not an error. The read call blocks in some libraries and must be run non-blocking or on its own thread.",
+            "Range is a few centimetres and drops further when the antenna is mounted against metal."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

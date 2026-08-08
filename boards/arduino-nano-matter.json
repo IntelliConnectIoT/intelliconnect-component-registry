@@ -1,0 +1,107 @@
+{
+    "key": "arduino-nano-matter",
+    "kind": "board",
+    "revision": 1,
+    "status": "unsupported",
+    "source": "platform-seed",
+    "platform": {
+        "name": "Arduino® Nano Matter",
+        "description": "Silicon Labs based board for Matter protocol over Thread.",
+        "board_type": "Microcontroller",
+        "manufacturer": "Arduino",
+        "model_number": "ABX00112",
+        "datasheet_url": null,
+        "cpu": "Silicon Labs MGM240S @ 39MHz",
+        "ram": "128KB SRAM",
+        "storage": "1MB Flash",
+        "operating_voltage": "3.3V",
+        "gpio_pins": 22,
+        "pwm_channels": 5,
+        "adc_channels": 8,
+        "dac_channels": 0,
+        "dimensions_mm": "45 x 18",
+        "weight_g": 5,
+        "has_npu": false,
+        "has_gpu": false,
+        "has_tpu": false,
+        "operating_systems": [
+            {
+                "name": "Arduino IDE"
+            }
+        ],
+        "communication_chips": [
+            {
+                "chip_model": "MGM240S",
+                "protocol": "Matter/Thread",
+                "standard": "802.15.4"
+            },
+            {
+                "chip_model": "MGM240S",
+                "protocol": "Bluetooth",
+                "standard": "5.3"
+            }
+        ],
+        "serial_protocols": [
+            {
+                "protocol": "UART",
+                "count": 1
+            },
+            {
+                "protocol": "I2C",
+                "count": 1
+            },
+            {
+                "protocol": "SPI",
+                "count": 1
+            }
+        ],
+        "interfaces": [
+            {
+                "type": "USB-C",
+                "count": 1
+            }
+        ],
+        "power": [
+            {
+                "source": "USB-C",
+                "voltage_min": 5,
+                "voltage_max": 5
+            }
+        ]
+    },
+    "harness": {
+        "provisioning_model": "firmware",
+        "component_attachment": "gpio-header",
+        "supported": false,
+        "blocked_reason": "Microcontroller class. No general purpose operating system, and insufficient memory to host Python and an MQTT client. Requires cross-compiled firmware built and flashed from a host machine.",
+        "runtime": {
+            "os_family": null,
+            "python3": false,
+            "package_manager": null,
+            "service_manager": null
+        },
+        "gpio": {
+            "library": null,
+            "pin_scheme": null,
+            "notes": "Pin access is compiled into the firmware image, not configured at runtime."
+        },
+        "probe": {
+            "model_file": null,
+            "overlay_file": null,
+            "commands": []
+        },
+        "local_inference": {
+            "viable": false,
+            "notes": "Insufficient memory for a general language model."
+        },
+        "toolchains": [
+            "Arduino IDE",
+            "Silicon Labs Gecko SDK"
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "os": null
+        }
+    }
+}

@@ -1,0 +1,98 @@
+{
+    "key": "arduino-nicla-voice",
+    "kind": "board",
+    "revision": 1,
+    "status": "unsupported",
+    "source": "platform-seed",
+    "platform": {
+        "name": "Arduino® Nicla Voice",
+        "description": "Always-on voice recognition board with Neural Decision Processor.",
+        "board_type": "AI / Edge Computing",
+        "manufacturer": "Arduino",
+        "model_number": "ABX00061",
+        "datasheet_url": null,
+        "cpu": "Nordic nRF52832 + Syntiant NDP120",
+        "ram": "64KB SRAM",
+        "storage": "512KB Flash",
+        "operating_voltage": "3.3V",
+        "gpio_pins": 10,
+        "pwm_channels": 4,
+        "adc_channels": 2,
+        "dac_channels": 0,
+        "dimensions_mm": "22.86 x 22.86",
+        "weight_g": 2,
+        "has_npu": true,
+        "has_gpu": false,
+        "has_tpu": false,
+        "operating_systems": [
+            {
+                "name": "Arduino IDE"
+            }
+        ],
+        "communication_chips": [
+            {
+                "chip_model": "u-blox ANNA-B112",
+                "protocol": "Bluetooth",
+                "standard": "5.0"
+            }
+        ],
+        "serial_protocols": [
+            {
+                "protocol": "I2C",
+                "count": 1
+            },
+            {
+                "protocol": "SPI",
+                "count": 1
+            }
+        ],
+        "interfaces": [
+            {
+                "type": "Micro USB",
+                "count": 1
+            }
+        ],
+        "power": [
+            {
+                "source": "Micro USB",
+                "voltage_min": 5,
+                "voltage_max": 5
+            }
+        ]
+    },
+    "harness": {
+        "provisioning_model": "firmware",
+        "component_attachment": "gpio-header",
+        "supported": false,
+        "blocked_reason": "Microcontroller class. No general purpose operating system, and insufficient memory to host Python and an MQTT client. Requires cross-compiled firmware built and flashed from a host machine.",
+        "runtime": {
+            "os_family": null,
+            "python3": false,
+            "package_manager": null,
+            "service_manager": null
+        },
+        "gpio": {
+            "library": null,
+            "pin_scheme": null,
+            "notes": "Pin access is compiled into the firmware image, not configured at runtime."
+        },
+        "probe": {
+            "model_file": null,
+            "overlay_file": null,
+            "commands": []
+        },
+        "local_inference": {
+            "viable": false,
+            "notes": "Insufficient memory for a general language model."
+        },
+        "toolchains": [
+            "Arduino IDE",
+            "Edge Impulse"
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "os": null
+        }
+    }
+}

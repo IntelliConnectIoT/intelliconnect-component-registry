@@ -1,0 +1,92 @@
+{
+    "key": "hc-sr04",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "HC-SR04 Ultrasonic Distance Sensor",
+        "description": "Ultrasonic ranging module. Measures distance 2cm to 400cm using echo time. GPIO trigger and echo pins.",
+        "sensor_type": "acoustic",
+        "protocol": "gpio",
+        "manufacturer": null,
+        "model_number": "HC-SR04",
+        "datasheet_url": null,
+        "read_interval_seconds": 10,
+        "readings": [
+            {
+                "slug": "distance",
+                "device_class": "distance",
+                "label": "Distance",
+                "unit": "centimetres",
+                "unit_symbol": "cm",
+                "data_type": "float",
+                "range_min": 2,
+                "range_max": 400,
+                "decimal_places": 1,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "hc-sr04"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "gpio-timing",
+        "connection": {
+            "pins": [
+                {
+                    "role": "trig",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "echo",
+                    "required": true,
+                    "notes": "Outputs 5V. Must be divided or level shifted to 3.3V before reaching a GPIO input."
+                }
+            ],
+            "supply_voltage": "5V",
+            "level_shift_required": "Required on echo"
+        },
+        "runtime": {
+            "python_module": "drivers.hcsr04",
+            "pip_packages": [
+                "adafruit-circuitpython-hcsr04"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "adafruit_hcsr04.HCSR04",
+                "args": {
+                    "trigger_pin": "board.D{trig_pin}",
+                    "echo_pin": "board.D{echo_pin}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 0.06,
+            "read_timeout_seconds": 1,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "The echo pin idles at 5V. Connecting it directly to a Raspberry Pi GPIO will damage the pin. A divider or level shifter is mandatory.",
+            "Measurement is timing based and is corrupted by scheduler latency. Occasional wild readings are expected and must be filtered rather than published.",
+            "Returns no echo for soft, angled or very close targets. A timeout is a valid outcome, not a fault.",
+            "Speed of sound varies with air temperature. Uncompensated readings drift by roughly 0.2 percent per degree."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

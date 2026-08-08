@@ -1,0 +1,135 @@
+{
+    "key": "raspberry-pi-5-16gb",
+    "kind": "board",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "Raspberry Pi 5 16GB",
+        "description": "Most powerful Raspberry Pi. BCM2712 SoC, PCIe Gen 2 x1, dual 4K display output.",
+        "board_type": "Single Board Computer",
+        "manufacturer": "Raspberry Pi Ltd",
+        "model_number": "Raspberry Pi 5 16GB",
+        "datasheet_url": null,
+        "cpu": "Broadcom BCM2712, quad-core Arm Cortex-A76 @ 2.4GHz",
+        "ram": "16GB LPDDR4X",
+        "storage": "MicroSD (UHS-I)",
+        "operating_voltage": "5V",
+        "gpio_pins": 40,
+        "pwm_channels": 4,
+        "adc_channels": 0,
+        "dac_channels": 0,
+        "dimensions_mm": "85 x 56",
+        "weight_g": 37,
+        "has_npu": false,
+        "has_gpu": true,
+        "has_tpu": false,
+        "operating_systems": [
+            {
+                "name": "Raspberry Pi OS (64-bit)"
+            },
+            {
+                "name": "Ubuntu Desktop"
+            }
+        ],
+        "communication_chips": [
+            {
+                "chip_model": "Infineon CYW43455",
+                "protocol": "Wi-Fi",
+                "standard": "802.11ac"
+            },
+            {
+                "chip_model": "Infineon CYW43455",
+                "protocol": "Bluetooth",
+                "standard": "5.0"
+            },
+            {
+                "chip_model": "Broadcom BCM54213PE",
+                "protocol": "Ethernet",
+                "standard": "Gigabit"
+            }
+        ],
+        "serial_protocols": [
+            {
+                "protocol": "I2C",
+                "count": 1
+            },
+            {
+                "protocol": "SPI",
+                "count": 2
+            },
+            {
+                "protocol": "UART",
+                "count": 1
+            },
+            {
+                "protocol": "PCIe",
+                "count": 1
+            }
+        ],
+        "interfaces": [
+            {
+                "type": "Micro HDMI",
+                "count": 2
+            },
+            {
+                "type": "USB-A 3.0",
+                "count": 2
+            },
+            {
+                "type": "USB-C",
+                "count": 1
+            }
+        ],
+        "power": [
+            {
+                "source": "USB-C",
+                "voltage_min": 5,
+                "voltage_max": 5,
+                "current_max_ma": 5000
+            }
+        ]
+    },
+    "harness": {
+        "provisioning_model": "linux-agent",
+        "component_attachment": "gpio-header",
+        "supported": true,
+        "blocked_reason": null,
+        "runtime": {
+            "os_family": "debian",
+            "python3": true,
+            "package_manager": "apt",
+            "service_manager": "systemd"
+        },
+        "gpio": {
+            "library": "libgpiod",
+            "pin_scheme": "bcm",
+            "notes": "RPi.GPIO does not work on Pi 5. The RP1 southbridge moved GPIO off the SoC, so lgpio or libgpiod is required."
+        },
+        "probe": {
+            "model_file": "/proc/device-tree/model",
+            "overlay_file": "/boot/firmware/config.txt",
+            "commands": [
+                "cat /proc/device-tree/model",
+                "uname -m",
+                "ls /sys/bus/iio/devices/*/name",
+                "ls /sys/class/hwmon/*/name",
+                "ls /sys/bus/w1/devices/",
+                "i2cdetect -y 1",
+                "lsusb",
+                "ls /dev/serial/by-id/",
+                "gpiodetect",
+                "gpioinfo"
+            ]
+        },
+        "local_inference": {
+            "viable": true,
+            "notes": "CPU only. No GPU or NPU acceleration available."
+        },
+        "verified": {
+            "by": null,
+            "date": null,
+            "os": null
+        }
+    }
+}

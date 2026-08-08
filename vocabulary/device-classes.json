@@ -1,0 +1,210 @@
+{
+    "version": 1,
+    "basis": "Home Assistant device_class vocabulary, restricted to reading slugs present in the IntelliConnect catalogue.",
+    "attribution": {
+        "source": "Home Assistant",
+        "url": "https://www.home-assistant.io/integrations/sensor/#device-class",
+        "licence": "Apache License 2.0",
+        "holder": "Home Assistant contributors",
+        "note": "The device_class names and their canonical units are adopted from Home Assistant so that data produced against this registry is interoperable with the wider ecosystem."
+    },
+    "rules": {
+        "slug": "Immutable once published. Historical time-series are keyed on it. suggested_slug is advisory only and must never be applied without a data migration.",
+        "unit_symbol": "Canonical display symbol. One symbol per device_class across the whole registry.",
+        "device_class": "Null means no Home Assistant equivalent exists. Null is valid and must not be guessed."
+    },
+    "classes": {
+        "temperature": {
+            "device_class": "temperature",
+            "unit_symbol": "°C",
+            "data_type": "float",
+            "suggested_slug": "temperature"
+        },
+        "humidity": {
+            "device_class": "humidity",
+            "unit_symbol": "%",
+            "data_type": "float",
+            "suggested_slug": "humidity"
+        },
+        "pressure": {
+            "device_class": "atmospheric_pressure",
+            "unit_symbol": "hPa",
+            "data_type": "float",
+            "suggested_slug": "pressure"
+        },
+        "co2": {
+            "device_class": "carbon_dioxide",
+            "unit_symbol": "ppm",
+            "data_type": "float",
+            "suggested_slug": "carbon_dioxide"
+        },
+        "gas-concentration": {
+            "device_class": "gas",
+            "unit_symbol": "ppm",
+            "data_type": "float",
+            "suggested_slug": "gas_concentration"
+        },
+        "turbidity": {
+            "device_class": null,
+            "unit_symbol": "NTU",
+            "data_type": "float",
+            "suggested_slug": "turbidity"
+        },
+        "illuminance": {
+            "device_class": "illuminance",
+            "unit_symbol": "lx",
+            "data_type": "float",
+            "suggested_slug": "illuminance"
+        },
+        "distance": {
+            "device_class": "distance",
+            "unit_symbol": "cm",
+            "data_type": "float",
+            "suggested_slug": "distance"
+        },
+        "barcode": {
+            "device_class": null,
+            "unit_symbol": null,
+            "data_type": "string",
+            "suggested_slug": "barcode"
+        },
+        "uid": {
+            "device_class": null,
+            "unit_symbol": null,
+            "data_type": "string",
+            "suggested_slug": "tag_uid"
+        },
+        "motion-detected": {
+            "device_class": "motion",
+            "unit_symbol": null,
+            "data_type": "boolean",
+            "suggested_slug": "motion"
+        },
+        "accel-x": {
+            "device_class": null,
+            "unit_symbol": "m/s²",
+            "data_type": "float",
+            "suggested_slug": "acceleration_x"
+        },
+        "accel-y": {
+            "device_class": null,
+            "unit_symbol": "m/s²",
+            "data_type": "float",
+            "suggested_slug": "acceleration_y"
+        },
+        "accel-z": {
+            "device_class": null,
+            "unit_symbol": "m/s²",
+            "data_type": "float",
+            "suggested_slug": "acceleration_z"
+        },
+        "gyro-x": {
+            "device_class": null,
+            "unit_symbol": "°/s",
+            "data_type": "float",
+            "suggested_slug": "gyroscope_x"
+        },
+        "gyro-y": {
+            "device_class": null,
+            "unit_symbol": "°/s",
+            "data_type": "float",
+            "suggested_slug": "gyroscope_y"
+        },
+        "gyro-z": {
+            "device_class": null,
+            "unit_symbol": "°/s",
+            "data_type": "float",
+            "suggested_slug": "gyroscope_z"
+        },
+        "voltage": {
+            "device_class": "voltage",
+            "unit_symbol": "V",
+            "data_type": "float",
+            "suggested_slug": "voltage"
+        },
+        "current": {
+            "device_class": "current",
+            "unit_symbol": "A",
+            "data_type": "float",
+            "suggested_slug": "current"
+        },
+        "power": {
+            "device_class": "power",
+            "unit_symbol": "W",
+            "data_type": "float",
+            "suggested_slug": "power"
+        },
+        "energy": {
+            "device_class": "energy",
+            "unit_symbol": "kWh",
+            "data_type": "float",
+            "suggested_slug": "energy"
+        },
+        "frequency": {
+            "device_class": "frequency",
+            "unit_symbol": "Hz",
+            "data_type": "float",
+            "suggested_slug": "frequency"
+        },
+        "power-factor": {
+            "device_class": "power_factor",
+            "unit_symbol": null,
+            "data_type": "float",
+            "suggested_slug": "power_factor"
+        },
+        "flow-rate": {
+            "device_class": "volume_flow_rate",
+            "unit_symbol": "L/min",
+            "data_type": "float",
+            "suggested_slug": "volume_flow_rate"
+        },
+        "level-percent": {
+            "device_class": null,
+            "unit_symbol": "%",
+            "data_type": "float",
+            "suggested_slug": "level"
+        },
+        "latitude": {
+            "device_class": null,
+            "unit_symbol": "°",
+            "data_type": "float",
+            "suggested_slug": "latitude"
+        },
+        "longitude": {
+            "device_class": null,
+            "unit_symbol": "°",
+            "data_type": "float",
+            "suggested_slug": "longitude"
+        },
+        "speed": {
+            "device_class": "speed",
+            "unit_symbol": "km/h",
+            "data_type": "float",
+            "suggested_slug": "speed"
+        },
+        "sound-level": {
+            "device_class": "sound_pressure",
+            "unit_symbol": "dB",
+            "data_type": "float",
+            "suggested_slug": "sound_pressure"
+        },
+        "object-temperature": {
+            "device_class": "temperature",
+            "unit_symbol": "°C",
+            "data_type": "float",
+            "suggested_slug": "object_temperature"
+        },
+        "ambient-temperature": {
+            "device_class": "temperature",
+            "unit_symbol": "°C",
+            "data_type": "float",
+            "suggested_slug": "ambient_temperature"
+        },
+        "weight": {
+            "device_class": "weight",
+            "unit_symbol": "kg",
+            "data_type": "float",
+            "suggested_slug": "weight"
+        }
+    }
+}

@@ -1,0 +1,126 @@
+{
+    "key": "arduino-uno-q-4gb",
+    "kind": "board",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "Arduino UNO Q 4GB",
+        "description": "Hybrid Qualcomm MPU + STM32 MCU board.",
+        "board_type": "Single Board Computer / Microcontroller Hybrid",
+        "manufacturer": "Arduino",
+        "model_number": "ABX00173",
+        "datasheet_url": null,
+        "cpu": "Qualcomm QRB2210 + STM32U585",
+        "ram": "4GB LPDDR4X",
+        "storage": "32GB eMMC",
+        "operating_voltage": "3.3V",
+        "gpio_pins": 12,
+        "pwm_channels": 4,
+        "adc_channels": 4,
+        "dac_channels": 1,
+        "dimensions_mm": "68.6 x 53.4",
+        "weight_g": 40,
+        "has_npu": true,
+        "has_gpu": true,
+        "has_tpu": false,
+        "operating_systems": [
+            {
+                "name": "Debian Linux"
+            },
+            {
+                "name": "Zephyr OS"
+            }
+        ],
+        "communication_chips": [
+            {
+                "chip_model": "Qualcomm integrated",
+                "protocol": "Wi-Fi",
+                "standard": "802.11ac"
+            },
+            {
+                "chip_model": "Qualcomm integrated",
+                "protocol": "Bluetooth",
+                "standard": "5.1"
+            }
+        ],
+        "serial_protocols": [
+            {
+                "protocol": "I2C",
+                "count": 1
+            },
+            {
+                "protocol": "SPI",
+                "count": 1
+            },
+            {
+                "protocol": "UART",
+                "count": 1
+            }
+        ],
+        "interfaces": [
+            {
+                "type": "USB-C",
+                "count": 1
+            },
+            {
+                "type": "CSI",
+                "count": 2
+            },
+            {
+                "type": "DSI",
+                "count": 1
+            }
+        ],
+        "power": [
+            {
+                "source": "USB-C",
+                "voltage_min": 5,
+                "voltage_max": 5,
+                "current_max_ma": 3000
+            }
+        ]
+    },
+    "harness": {
+        "provisioning_model": "linux-agent",
+        "component_attachment": "gpio-header",
+        "supported": true,
+        "blocked_reason": null,
+        "runtime": {
+            "os_family": "debian",
+            "python3": true,
+            "package_manager": "apt",
+            "service_manager": "systemd"
+        },
+        "gpio": {
+            "library": null,
+            "pin_scheme": null,
+            "notes": "Debian runs on the QRB2210 application processor. The UNO headers are driven by the STM32U585 microcontroller. Whether the Linux side addresses header pins directly or through an MCU bridge is unconfirmed."
+        },
+        "probe": {
+            "model_file": "/proc/device-tree/model",
+            "overlay_file": null,
+            "commands": [
+                "cat /proc/device-tree/model",
+                "uname -m",
+                "ls /sys/bus/iio/devices/*/name",
+                "ls /sys/class/hwmon/*/name",
+                "ls /sys/bus/w1/devices/",
+                "i2cdetect -y 1",
+                "lsusb",
+                "ls /dev/serial/by-id/",
+                "gpiodetect",
+                "gpioinfo"
+            ]
+        },
+        "local_inference": {
+            "viable": null,
+            "notes": "Carries an NPU. Capability and toolchain for local inference are unconfirmed."
+        },
+        "verified": {
+            "by": null,
+            "date": null,
+            "os": null
+        }
+    }
+}

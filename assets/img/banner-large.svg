@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" width="2560" height="640" role="img" aria-label="IntelliConnect Component Registry">
+    <defs>
+        <linearGradient id="crAccent" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#219ace"/>
+            <stop offset="50%" stop-color="#4facfe"/>
+            <stop offset="100%" stop-color="#00f2fe"/>
+        </linearGradient>
+        <linearGradient id="crBg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#05070A"/>
+            <stop offset="100%" stop-color="#0B0E14"/>
+        </linearGradient>
+        <radialGradient id="crGlow" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stop-color="#0055FF" stop-opacity="0.28"/>
+            <stop offset="100%" stop-color="#0055FF" stop-opacity="0"/>
+        </radialGradient>
+    </defs>
+
+    <rect width="1280" height="320" fill="url(#crBg)"/>
+    <ellipse cx="1010" cy="150" rx="420" ry="240" fill="url(#crGlow)"/>
+
+    <g stroke="rgba(77,138,255,0.10)" stroke-width="1">
+        <path d="M0 80 H1280 M0 160 H1280 M0 240 H1280"/>
+        <path d="M160 0 V320 M320 0 V320 M480 0 V320 M640 0 V320 M800 0 V320 M960 0 V320 M1120 0 V320"/>
+    </g>
+
+    <g transform="translate(96 88)">
+        <circle cx="36" cy="60" r="11" fill="url(#crAccent)"/>
+        <g fill="none" stroke="url(#crAccent)" stroke-width="8" stroke-linecap="round">
+            <path d="M 51.4 41.6 A 24 24 0 0 1 51.4 78.4"/>
+            <path d="M 61.7 29.4 A 40 40 0 0 1 61.7 90.6" opacity="0.8"/>
+            <path d="M 72.0 17.1 A 56 56 0 0 1 72.0 102.9" opacity="0.55"/>
+        </g>
+    </g>
+
+    <text x="228" y="152" font-family="Outfit, 'Segoe UI', Arial, sans-serif" font-size="54" font-weight="800" letter-spacing="2" fill="#E2E8F0">INTELLICONNECT</text>
+    <text x="228" y="212" font-family="Outfit, 'Segoe UI', Arial, sans-serif" font-size="44" font-weight="600" letter-spacing="1.5" fill="url(#crAccent)">COMPONENT REGISTRY</text>
+    <text x="230" y="256" font-family="'JetBrains Mono', 'Courier New', monospace" font-size="19" letter-spacing="1" fill="#94A3B8">boards // sensors // actuators</text>
+
+    <rect x="228" y="278" width="132" height="3" rx="1.5" fill="url(#crAccent)"/>
+</svg>

@@ -1,0 +1,23 @@
+IntelliConnect Component Registry
+Copyright 2026 CogniTech Systems
+
+This product includes software developed at CogniTech Systems
+(https://cognitech.systems).
+
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+--------------------------------------------------------------------------------
+
+Third party attribution
+
+The device class names and their canonical units in
+vocabulary/device-classes.json are adopted from Home Assistant
+(https://www.home-assistant.io/integrations/sensor/#device-class),
+Copyright Home Assistant contributors, licensed under the Apache License,
+Version 2.0. They are used so that data produced against this registry stays
+interoperable with the wider ecosystem.
+
+Component specifications in this registry are factual values drawn from
+manufacturer datasheets, cited per entry in the datasheet_url field. Driver
+entries reference third party libraries by name in order to install them. They
+do not reproduce those libraries, and each remains under its own licence.

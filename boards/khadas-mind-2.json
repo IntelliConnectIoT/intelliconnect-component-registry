@@ -1,0 +1,79 @@
+{
+    "key": "khadas-mind-2",
+    "kind": "board",
+    "revision": 1,
+    "status": "draft",
+    "source": "authored",
+    "platform": {
+        "name": "Khadas Mind 2",
+        "description": "Modular x86 mini PC with an Intel AI Boost NPU and a proprietary expansion interface for docks.",
+        "board_type": "AI / Edge Computing",
+        "manufacturer": "Khadas",
+        "model_number": "Mind 2",
+        "datasheet_url": null,
+        "cpu": "Intel Core Ultra (Meteor Lake)",
+        "ram": null,
+        "storage": null,
+        "operating_voltage": null,
+        "gpio_pins": 0,
+        "pwm_channels": 0,
+        "adc_channels": 0,
+        "dac_channels": 0,
+        "dimensions_mm": null,
+        "weight_g": null,
+        "has_npu": true,
+        "has_gpu": true,
+        "has_tpu": false,
+        "operating_systems": [
+            {
+                "name": "Windows 11"
+            },
+            {
+                "name": "Ubuntu"
+            }
+        ],
+        "communication_chips": [],
+        "serial_protocols": [],
+        "interfaces": [],
+        "power": []
+    },
+    "harness": {
+        "provisioning_model": "linux-agent",
+        "component_attachment": "usb-serial",
+        "supported": true,
+        "blocked_reason": null,
+        "runtime": {
+            "os_family": "debian",
+            "python3": true,
+            "package_manager": "apt",
+            "service_manager": "systemd"
+        },
+        "gpio": {
+            "library": null,
+            "pin_scheme": null,
+            "notes": "No GPIO header. Components attach over USB, serial or network, or through a Khadas expansion dock. Registry driver entries that require pin assignment do not apply to this board."
+        },
+        "probe": {
+            "model_file": "/sys/class/dmi/id/product_name",
+            "overlay_file": null,
+            "commands": [
+                "cat /sys/class/dmi/id/product_name",
+                "cat /sys/class/dmi/id/sys_vendor",
+                "uname -m",
+                "ls /sys/class/hwmon/*/name",
+                "lsusb",
+                "ls /dev/serial/by-id/",
+                "lspci"
+            ]
+        },
+        "local_inference": {
+            "viable": true,
+            "notes": "Intel AI Boost NPU and integrated Arc GPU. x86_64."
+        },
+        "verified": {
+            "by": null,
+            "date": null,
+            "os": null
+        }
+    }
+}

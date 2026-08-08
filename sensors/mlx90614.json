@@ -1,0 +1,108 @@
+{
+    "key": "mlx90614",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "MLX90614 IR Non-contact Thermometer",
+        "description": "Infrared thermometer for non-contact surface temperature measurement over I2C. Factory calibrated.",
+        "sensor_type": "radiation",
+        "protocol": "i2c",
+        "manufacturer": "Melexis",
+        "model_number": "MLX90614",
+        "datasheet_url": "https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90614",
+        "read_interval_seconds": 10,
+        "readings": [
+            {
+                "slug": "object-temperature",
+                "device_class": "temperature",
+                "label": "Object Temperature",
+                "unit": "degrees celsius",
+                "unit_symbol": "°C",
+                "data_type": "float",
+                "range_min": -70,
+                "range_max": 380,
+                "decimal_places": 2,
+                "threshold_warn_low": null,
+                "threshold_warn_high": 60,
+                "threshold_crit_low": null,
+                "threshold_crit_high": 80
+            },
+            {
+                "slug": "ambient-temperature",
+                "device_class": "temperature",
+                "label": "Ambient Temperature",
+                "unit": "degrees celsius",
+                "unit_symbol": "°C",
+                "data_type": "float",
+                "range_min": -40,
+                "range_max": 125,
+                "decimal_places": 2,
+                "threshold_warn_low": 10,
+                "threshold_warn_high": 40,
+                "threshold_crit_low": 0,
+                "threshold_crit_high": 50
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "mlx90614"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "i2c",
+        "connection": {
+            "pins": [
+                {
+                    "role": "sda",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "scl",
+                    "required": true,
+                    "notes": null
+                }
+            ],
+            "supply_voltage": "3.3V",
+            "i2c_addresses": [
+                "0x5A"
+            ],
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.mlx90614",
+            "pip_packages": [
+                "adafruit-circuitpython-mlx90614"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "adafruit_mlx90614.MLX90614",
+                "args": {
+                    "i2c": "board.I2C()"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 1,
+            "read_timeout_seconds": 2,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Requires I2C repeated start. The Raspberry Pi I2C driver does not issue it by default and the sensor returns errors until combined transfers are enabled.",
+            "Measures whatever fills its field of view, which widens with distance. An object temperature reading is only meaningful when the target fills the cone.",
+            "Ambient and object channels drift together with the sensor body temperature. Allow it to reach thermal equilibrium before trusting readings."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

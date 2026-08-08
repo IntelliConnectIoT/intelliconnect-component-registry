@@ -1,0 +1,108 @@
+{
+    "key": "pump-5v-mini",
+    "kind": "actuator",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "5V Mini Submersible Water Pump",
+        "description": "Small 5V DC submersible water pump. GPIO or relay controlled. Used for irrigation, fountains and liquid dispensing.",
+        "actuator_type": "pump",
+        "protocol": "gpio",
+        "manufacturer": null,
+        "model_number": "PUMP-5V-MINI",
+        "datasheet_url": null,
+        "command_topic_suffix": "command/pump",
+        "response_topic_suffix": "response/pump",
+        "states": [
+            {
+                "command": "ON",
+                "label": "On",
+                "description": "Start the pump",
+                "payload": "ON",
+                "sort_order": 1,
+                "parameter": null
+            },
+            {
+                "command": "OFF",
+                "label": "Off",
+                "description": "Stop the pump",
+                "payload": "OFF",
+                "sort_order": 2,
+                "parameter": null
+            },
+            {
+                "command": "PULSE",
+                "label": "Pulse",
+                "description": "Run pump for a specified duration in milliseconds then stop automatically",
+                "payload": "{\"duration_ms\": 3000}",
+                "sort_order": 3,
+                "parameter": {
+                    "name": "duration",
+                    "data_type": "integer",
+                    "unit_symbol": "s",
+                    "range_min": 1,
+                    "range_max": 30,
+                    "required": true
+                }
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "pump-5v-mini"
+        ],
+        "device_class": "pump"
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "gpio-digital",
+        "connection": {
+            "pins": [
+                {
+                    "role": "control",
+                    "required": true,
+                    "notes": "Drives a MOSFET or relay."
+                }
+            ],
+            "supply_voltage": "5V load, 3.3V logic",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.gpio_switch",
+            "pip_packages": [
+                "gpiod"
+            ],
+            "apt_packages": [
+                "python3-libgpiod"
+            ],
+            "init": {
+                "class": "drivers.gpio_switch.GPIOSwitch",
+                "args": {
+                    "chip": "{gpio_chip}",
+                    "line": "{control_pin}",
+                    "active_low": "{active_low}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": null,
+            "read_timeout_seconds": null,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "An inductive load generates a reverse voltage spike when de-energised. A flyback diode across the load is mandatory or the switching device fails, often shorted and permanently on.",
+            "Coil current exceeds any GPIO pin. A driver transistor or relay is required between the pin and the load.",
+            "Holding a solenoid energised heats the coil continuously. Sustained duty needs either a rated continuous-duty part or an enforced maximum on time.",
+            "Running dry destroys the impeller seal within minutes. A pump command needs an enforced maximum on time independent of whatever asked for it."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

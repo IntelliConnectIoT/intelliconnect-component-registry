@@ -1,0 +1,95 @@
+{
+    "key": "hx711",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "HX711 Load Cell Amplifier",
+        "description": "24-bit ADC amplifier for Wheatstone bridge load cells. Used for weight and force measurement via GPIO.",
+        "sensor_type": "force",
+        "protocol": "gpio",
+        "manufacturer": "AVIA Semiconductor",
+        "model_number": "HX711",
+        "datasheet_url": "https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/hx711_english.pdf",
+        "read_interval_seconds": 10,
+        "readings": [
+            {
+                "slug": "weight",
+                "device_class": "weight",
+                "label": "Weight",
+                "unit": "kilograms",
+                "unit_symbol": "kg",
+                "data_type": "float",
+                "range_min": 0,
+                "range_max": null,
+                "decimal_places": 3,
+                "threshold_warn_low": null,
+                "threshold_warn_high": null,
+                "threshold_crit_low": null,
+                "threshold_crit_high": null
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "hx711"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "gpio-bitbang",
+        "connection": {
+            "pins": [
+                {
+                    "role": "dt",
+                    "required": true,
+                    "notes": "Serial data out from the amplifier."
+                },
+                {
+                    "role": "sck",
+                    "required": true,
+                    "notes": "Clock driven by the host."
+                }
+            ],
+            "supply_voltage": "3.3V or 5V",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.hx711",
+            "pip_packages": [
+                "gpiod"
+            ],
+            "apt_packages": [
+                "python3-libgpiod"
+            ],
+            "init": {
+                "class": "drivers.hx711.HX711",
+                "args": {
+                    "chip": "{gpio_chip}",
+                    "data_line": "{dt_pin}",
+                    "clock_line": "{sck_pin}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 0.1,
+            "read_timeout_seconds": 2,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Raw output is a signed count with no physical meaning. A tare offset and a scale factor must be established per load cell and stored per device, otherwise the published weight is arbitrary.",
+            "Bit-banged clocking is sensitive to scheduler preemption. A pulse held high longer than 60 microseconds puts the part into power down and the next read returns garbage.",
+            "Reading rate is fixed by the RATE pin at 10Hz or 80Hz. The host cannot sample faster than the part converts.",
+            "Zero drifts with temperature. Long deployments need periodic re-taring at a known empty state."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

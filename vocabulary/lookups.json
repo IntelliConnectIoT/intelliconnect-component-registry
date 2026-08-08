@@ -1,0 +1,200 @@
+{
+    "sensor_types": [
+        {
+            "slug": "environmental",
+            "name": "Environmental",
+            "description": "Temperature, humidity, pressure, air quality"
+        },
+        {
+            "slug": "optical",
+            "name": "Optical",
+            "description": "Light, colour, turbidity, proximity, LiDAR"
+        },
+        {
+            "slug": "identity",
+            "name": "Identity",
+            "description": "Barcode, QR, RFID, NFC, fingerprint"
+        },
+        {
+            "slug": "motion",
+            "name": "Motion",
+            "description": "PIR, accelerometer, gyroscope, vibration"
+        },
+        {
+            "slug": "electrical",
+            "name": "Electrical",
+            "description": "Voltage, current, power, energy metering"
+        },
+        {
+            "slug": "fluid",
+            "name": "Fluid",
+            "description": "Flow rate, level, pressure, pH, conductivity"
+        },
+        {
+            "slug": "acoustic",
+            "name": "Acoustic",
+            "description": "Sound level, ultrasonic distance"
+        },
+        {
+            "slug": "position",
+            "name": "Position",
+            "description": "GPS, GNSS, indoor positioning"
+        },
+        {
+            "slug": "gas",
+            "name": "Gas",
+            "description": "CO2, CO, VOC, O2, smoke, flammable gas"
+        },
+        {
+            "slug": "force",
+            "name": "Force & Weight",
+            "description": "Load cell, strain gauge, torque"
+        },
+        {
+            "slug": "radiation",
+            "name": "Radiation",
+            "description": "UV index, IR thermometer, Geiger"
+        },
+        {
+            "slug": "biological",
+            "name": "Biological",
+            "description": "Heart rate, SpO2, biometric"
+        }
+    ],
+    "sensor_protocols": [
+        {
+            "slug": "i2c",
+            "name": "I2C",
+            "description": "Inter-Integrated Circuit, two-wire serial"
+        },
+        {
+            "slug": "spi",
+            "name": "SPI",
+            "description": "Serial Peripheral Interface, four-wire"
+        },
+        {
+            "slug": "uart",
+            "name": "UART",
+            "description": "Universal Asynchronous Receiver-Transmitter"
+        },
+        {
+            "slug": "gpio",
+            "name": "GPIO",
+            "description": "General Purpose Input/Output digital pin"
+        },
+        {
+            "slug": "analog",
+            "name": "Analog (ADC)",
+            "description": "Analog voltage read via ADC pin"
+        },
+        {
+            "slug": "1wire",
+            "name": "1-Wire",
+            "description": "Dallas 1-Wire single data line protocol"
+        },
+        {
+            "slug": "pwm",
+            "name": "PWM",
+            "description": "Pulse Width Modulation"
+        },
+        {
+            "slug": "can",
+            "name": "CAN Bus",
+            "description": "Controller Area Network, industrial"
+        },
+        {
+            "slug": "rs485",
+            "name": "RS-485",
+            "description": "Differential serial, long cable runs"
+        },
+        {
+            "slug": "usb",
+            "name": "USB",
+            "description": "Universal Serial Bus"
+        },
+        {
+            "slug": "wifi",
+            "name": "Wi-Fi",
+            "description": "IEEE 802.11 wireless"
+        },
+        {
+            "slug": "ble",
+            "name": "BLE",
+            "description": "Bluetooth Low Energy"
+        },
+        {
+            "slug": "lorawan",
+            "name": "LoRaWAN",
+            "description": "Low power wide area network"
+        },
+        {
+            "slug": "zigbee",
+            "name": "Zigbee",
+            "description": "IEEE 802.15.4 mesh network"
+        },
+        {
+            "slug": "zwave",
+            "name": "Z-Wave",
+            "description": "Sub-GHz mesh for home automation"
+        }
+    ],
+    "actuator_types": [
+        {
+            "slug": "relay",
+            "name": "Relay",
+            "description": "On/off switching of electrical loads"
+        },
+        {
+            "slug": "pwm",
+            "name": "PWM",
+            "description": "Pulse width modulation for speed and brightness control"
+        },
+        {
+            "slug": "servo",
+            "name": "Servo",
+            "description": "Positional rotation control"
+        },
+        {
+            "slug": "stepper",
+            "name": "Stepper Motor",
+            "description": "Precise step-based rotation control"
+        },
+        {
+            "slug": "solenoid",
+            "name": "Solenoid",
+            "description": "Electromechanical valve or lock control"
+        },
+        {
+            "slug": "led",
+            "name": "LED / Display",
+            "description": "LED, RGB LED, and display output"
+        },
+        {
+            "slug": "buzzer",
+            "name": "Buzzer / Alarm",
+            "description": "Audible alert and alarm output"
+        },
+        {
+            "slug": "motor",
+            "name": "DC Motor",
+            "description": "Direct current motor speed and direction control"
+        },
+        {
+            "slug": "pump",
+            "name": "Pump",
+            "description": "Liquid or air pump control"
+        },
+        {
+            "slug": "heater",
+            "name": "Heater",
+            "description": "Resistive heating element control"
+        }
+    ],
+    "board_types": [
+        "Single Board Computer",
+        "Microcontroller",
+        "Single Board Computer / Microcontroller Hybrid",
+        "AI / Edge Computing",
+        "Industrial Computer"
+    ]
+}

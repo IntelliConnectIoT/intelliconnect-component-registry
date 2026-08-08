@@ -1,0 +1,122 @@
+{
+    "key": "nvidia-jetson-orin-nano-super",
+    "kind": "board",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "NVIDIA JETSON Orin Nano Super",
+        "description": "Elite-tier Orin Nano delivering 100 TOPS AI performance.",
+        "board_type": "AI / Edge Computing",
+        "manufacturer": "NVIDIA",
+        "model_number": "Orin Nano Super",
+        "datasheet_url": null,
+        "cpu": "6-core Arm A78AE @ 1.5GHz",
+        "ram": "16GB LPDDR5",
+        "storage": "M.2 NVMe Gen4 Slot",
+        "operating_voltage": "19V",
+        "gpio_pins": 40,
+        "pwm_channels": 2,
+        "adc_channels": 0,
+        "dac_channels": 0,
+        "dimensions_mm": "100 x 80",
+        "weight_g": 160,
+        "has_npu": true,
+        "has_gpu": true,
+        "has_tpu": false,
+        "operating_systems": [
+            {
+                "name": "JetPack 6.0 (Ubuntu 22.04)"
+            }
+        ],
+        "communication_chips": [
+            {
+                "chip_model": "Realtek RTL8111H",
+                "protocol": "Ethernet",
+                "standard": "Gigabit"
+            }
+        ],
+        "serial_protocols": [
+            {
+                "protocol": "I2C",
+                "count": 4
+            },
+            {
+                "protocol": "SPI",
+                "count": 3
+            },
+            {
+                "protocol": "UART",
+                "count": 2
+            },
+            {
+                "protocol": "CAN",
+                "count": 2
+            }
+        ],
+        "interfaces": [
+            {
+                "type": "DisplayPort",
+                "count": 1
+            },
+            {
+                "type": "USB-A 3.2 Gen2",
+                "count": 4
+            },
+            {
+                "type": "Ethernet",
+                "count": 1
+            }
+        ],
+        "power": [
+            {
+                "source": "DC Jack",
+                "voltage_min": 19,
+                "voltage_max": 19,
+                "current_max_ma": 4740
+            }
+        ]
+    },
+    "harness": {
+        "provisioning_model": "linux-agent",
+        "component_attachment": "gpio-header",
+        "supported": true,
+        "blocked_reason": null,
+        "runtime": {
+            "os_family": "ubuntu",
+            "python3": true,
+            "package_manager": "apt",
+            "service_manager": "systemd"
+        },
+        "gpio": {
+            "library": "Jetson.GPIO",
+            "pin_scheme": "board",
+            "notes": "40-pin header is Pi-compatible in layout but not in driver stack. Adafruit Blinka maps CircuitPython drivers onto Jetson.GPIO. That mapping is per sensor and is not implied by Pi support."
+        },
+        "probe": {
+            "model_file": "/proc/device-tree/model",
+            "overlay_file": null,
+            "commands": [
+                "cat /proc/device-tree/model",
+                "uname -m",
+                "ls /sys/bus/iio/devices/*/name",
+                "ls /sys/class/hwmon/*/name",
+                "ls /sys/bus/w1/devices/",
+                "i2cdetect -y 1",
+                "lsusb",
+                "ls /dev/serial/by-id/",
+                "gpiodetect",
+                "gpioinfo"
+            ]
+        },
+        "local_inference": {
+            "viable": true,
+            "notes": "CUDA capable via the integrated Ampere GPU."
+        },
+        "verified": {
+            "by": null,
+            "date": null,
+            "os": null
+        }
+    }
+}

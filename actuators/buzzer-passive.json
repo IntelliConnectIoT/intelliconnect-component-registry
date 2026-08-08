@@ -1,0 +1,111 @@
+{
+    "key": "buzzer-passive",
+    "kind": "actuator",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "Passive Buzzer Module",
+        "description": "Passive buzzer driven by PWM frequency. Produces tones at specified frequencies. 3.3V-5V GPIO controlled.",
+        "actuator_type": "buzzer",
+        "protocol": "pwm",
+        "manufacturer": null,
+        "model_number": "BUZZER-PASSIVE",
+        "datasheet_url": null,
+        "command_topic_suffix": "command/buzzer",
+        "response_topic_suffix": "response/buzzer",
+        "states": [
+            {
+                "command": "BEEP",
+                "label": "Beep",
+                "description": "Single short beep",
+                "payload": "BEEP",
+                "sort_order": 1,
+                "parameter": null
+            },
+            {
+                "command": "ALARM",
+                "label": "Alarm",
+                "description": "Continuous alarm tone",
+                "payload": "ALARM",
+                "sort_order": 2,
+                "parameter": null
+            },
+            {
+                "command": "TONE",
+                "label": "Play Tone",
+                "description": "Play tone at specified frequency and duration. Payload: frequency in Hz and duration in ms",
+                "payload": "{\"frequency\": 1000, \"duration\": 500}",
+                "sort_order": 3,
+                "parameter": {
+                    "name": "frequency",
+                    "data_type": "integer",
+                    "unit_symbol": "Hz",
+                    "range_min": 100,
+                    "range_max": 5000,
+                    "required": true
+                }
+            },
+            {
+                "command": "OFF",
+                "label": "Off",
+                "description": "Stop buzzer",
+                "payload": "OFF",
+                "sort_order": 4,
+                "parameter": null
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "buzzer-passive"
+        ],
+        "device_class": "siren"
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "pwm",
+        "connection": {
+            "pins": [
+                {
+                    "role": "signal",
+                    "required": true,
+                    "notes": "Requires a square wave at the desired pitch."
+                }
+            ],
+            "supply_voltage": "3.3V or 5V",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.buzzer_passive",
+            "pip_packages": [
+                "rpi-lgpio"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "drivers.buzzer_passive.PassiveBuzzer",
+                "args": {
+                    "pin": "{signal_pin}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": null,
+            "read_timeout_seconds": null,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Produces no sound from a steady level. It must be driven with a square wave at the target frequency.",
+            "Software PWM jitters under load and the pitch wavers audibly. Hardware PWM channels are limited and are shared with other peripherals.",
+            "Drive current at the top of its range exceeds a GPIO pin. Loud operation needs a transistor."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

@@ -1,0 +1,140 @@
+{
+    "key": "ws2812b",
+    "kind": "actuator",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "WS2812B RGB LED Strip",
+        "description": "Addressable RGB LED strip. Each LED individually controllable via single data wire. 5V. Used for lighting and visual indicators.",
+        "actuator_type": "led",
+        "protocol": "gpio",
+        "manufacturer": "Worldsemi",
+        "model_number": "WS2812B",
+        "datasheet_url": null,
+        "command_topic_suffix": "command/led",
+        "response_topic_suffix": "response/led",
+        "states": [
+            {
+                "command": "SET_COLOR",
+                "label": "Set Color",
+                "description": "Set LED color. Payload: RGB hex value",
+                "payload": "{\"color\": \"#FF0000\"}",
+                "sort_order": 1,
+                "parameter": {
+                    "name": "colour",
+                    "data_type": "string",
+                    "format": "hex-rgb",
+                    "pattern": "^#?[0-9A-Fa-f]{6}$",
+                    "required": true
+                }
+            },
+            {
+                "command": "SET_BRIGHTNESS",
+                "label": "Set Brightness",
+                "description": "Set LED brightness. Payload: 0-255",
+                "payload": "{\"brightness\": 128}",
+                "sort_order": 2,
+                "parameter": {
+                    "name": "brightness",
+                    "data_type": "integer",
+                    "unit_symbol": "%",
+                    "range_min": 0,
+                    "range_max": 100,
+                    "required": true
+                }
+            },
+            {
+                "command": "ON",
+                "label": "On",
+                "description": "Turn all LEDs on at current color and brightness",
+                "payload": "ON",
+                "sort_order": 3,
+                "parameter": null
+            },
+            {
+                "command": "OFF",
+                "label": "Off",
+                "description": "Turn all LEDs off",
+                "payload": "OFF",
+                "sort_order": 4,
+                "parameter": null
+            },
+            {
+                "command": "EFFECT",
+                "label": "Set Effect",
+                "description": "Set a lighting effect. Payload: effect name",
+                "payload": "{\"effect\": \"rainbow\"}",
+                "sort_order": 5,
+                "parameter": {
+                    "name": "effect",
+                    "data_type": "enum",
+                    "values": [
+                        "solid",
+                        "blink",
+                        "breathe",
+                        "chase",
+                        "rainbow"
+                    ],
+                    "required": true
+                }
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "ws2812b"
+        ],
+        "device_class": "light"
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "timed-serial",
+        "connection": {
+            "pins": [
+                {
+                    "role": "din",
+                    "required": true,
+                    "notes": "Single wire data input with strict timing."
+                }
+            ],
+            "supply_voltage": "5V",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.ws2812b",
+            "pip_packages": [
+                "rpi-ws281x",
+                "adafruit-circuitpython-neopixel"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "neopixel.NeoPixel",
+                "args": {
+                    "pin": "board.D{din_pin}",
+                    "n": "{pixel_count}",
+                    "auto_write": false
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": null,
+            "read_timeout_seconds": null,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Timing is too tight for software bit-banging. On a Raspberry Pi it requires DMA driven PWM or SPI, and the PWM route conflicts with on-board audio.",
+            "The rpi-ws281x path requires root, which is a real constraint on a service that should not otherwise be privileged.",
+            "A 5V strip may not recognise a 3.3V data line. Long runs commonly need a level shifter on the first pixel.",
+            "Current scales with pixel count and brightness. A strip of any length must be powered from its own supply, injected at both ends for long runs, and cannot be fed from a board rail."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

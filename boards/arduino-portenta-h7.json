@@ -1,0 +1,123 @@
+{
+    "key": "arduino-portenta-h7",
+    "kind": "board",
+    "revision": 1,
+    "status": "unsupported",
+    "source": "platform-seed",
+    "platform": {
+        "name": "Arduino® Portenta H7",
+        "description": "Dual-core M7/M4 industrial module for real-time tasks.",
+        "board_type": "Single Board Computer / Microcontroller Hybrid",
+        "manufacturer": "Arduino",
+        "model_number": "ABX00032",
+        "datasheet_url": null,
+        "cpu": "STM32H747XI Dual Core",
+        "ram": "8MB SDRAM",
+        "storage": "16MB Flash",
+        "operating_voltage": "3.3V",
+        "gpio_pins": 22,
+        "pwm_channels": 10,
+        "adc_channels": 3,
+        "dac_channels": 2,
+        "dimensions_mm": "66 x 25",
+        "weight_g": 15,
+        "has_npu": false,
+        "has_gpu": true,
+        "has_tpu": false,
+        "operating_systems": [
+            {
+                "name": "Arduino IDE"
+            },
+            {
+                "name": "MicroPython"
+            },
+            {
+                "name": "Mbed OS"
+            }
+        ],
+        "communication_chips": [
+            {
+                "chip_model": "Murata 1DX",
+                "protocol": "Wi-Fi",
+                "standard": "802.11b/g/n"
+            },
+            {
+                "chip_model": "Murata 1DX",
+                "protocol": "Bluetooth",
+                "standard": "5.1"
+            },
+            {
+                "chip_model": "Microchip LAN8742",
+                "protocol": "Ethernet",
+                "standard": "10/100"
+            }
+        ],
+        "serial_protocols": [
+            {
+                "protocol": "UART",
+                "count": 4
+            },
+            {
+                "protocol": "CAN",
+                "count": 1
+            },
+            {
+                "protocol": "I2C",
+                "count": 3
+            }
+        ],
+        "interfaces": [
+            {
+                "type": "USB-C",
+                "count": 1
+            },
+            {
+                "type": "80-pin HD Connector",
+                "count": 2
+            }
+        ],
+        "power": [
+            {
+                "source": "USB-C",
+                "voltage_min": 5,
+                "voltage_max": 5
+            }
+        ]
+    },
+    "harness": {
+        "provisioning_model": "firmware",
+        "component_attachment": "gpio-header",
+        "supported": false,
+        "blocked_reason": "Microcontroller class. No general purpose operating system, and insufficient memory to host Python and an MQTT client. Requires cross-compiled firmware built and flashed from a host machine.",
+        "runtime": {
+            "os_family": null,
+            "python3": false,
+            "package_manager": null,
+            "service_manager": null
+        },
+        "gpio": {
+            "library": null,
+            "pin_scheme": null,
+            "notes": "Pin access is compiled into the firmware image, not configured at runtime."
+        },
+        "probe": {
+            "model_file": null,
+            "overlay_file": null,
+            "commands": []
+        },
+        "local_inference": {
+            "viable": false,
+            "notes": "Insufficient memory for a general language model."
+        },
+        "toolchains": [
+            "Arduino IDE",
+            "MicroPython",
+            "Mbed OS"
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "os": null
+        }
+    }
+}

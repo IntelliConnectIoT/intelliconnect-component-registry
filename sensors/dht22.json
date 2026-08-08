@@ -1,0 +1,110 @@
+{
+    "key": "dht22",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "DHT22 Temperature & Humidity Sensor",
+        "description": "Digital capacitive humidity and temperature sensor. Single-wire serial output. Suitable for indoor climate monitoring.",
+        "sensor_type": "environmental",
+        "protocol": "1wire",
+        "manufacturer": "Aosong",
+        "model_number": "DHT22",
+        "datasheet_url": "https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf",
+        "read_interval_seconds": 30,
+        "readings": [
+            {
+                "slug": "temperature",
+                "device_class": "temperature",
+                "label": "Temperature",
+                "unit": "degrees celsius",
+                "unit_symbol": "°C",
+                "data_type": "float",
+                "range_min": -40,
+                "range_max": 80,
+                "decimal_places": 1,
+                "threshold_warn_low": 10,
+                "threshold_warn_high": 30,
+                "threshold_crit_low": 0,
+                "threshold_crit_high": 40
+            },
+            {
+                "slug": "humidity",
+                "device_class": "humidity",
+                "label": "Relative Humidity",
+                "unit": "percent",
+                "unit_symbol": "%",
+                "data_type": "float",
+                "range_min": 0,
+                "range_max": 100,
+                "decimal_places": 1,
+                "threshold_warn_low": 30,
+                "threshold_warn_high": 70,
+                "threshold_crit_low": 20,
+                "threshold_crit_high": 85
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "dht22",
+            "am2302"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "gpio-single-wire",
+        "connection": {
+            "pins": [
+                {
+                    "role": "data",
+                    "required": true,
+                    "notes": "Any free GPIO."
+                }
+            ],
+            "supply_voltage": "3.3V or 5V",
+            "pullup_ohms": 10000
+        },
+        "runtime": {
+            "python_module": "drivers.dht22",
+            "pip_packages": [
+                "adafruit-circuitpython-dht",
+                "lgpio",
+                "gpiod"
+            ],
+            "apt_packages": [
+                "swig",
+                "liblgpio-dev",
+                "python3-libgpiod"
+            ],
+            "init": {
+                "class": "adafruit_dht.DHT22",
+                "args": {
+                    "pin": "board.D{data_pin}",
+                    "use_pulseio": false
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 2,
+            "read_timeout_seconds": 5,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Intermittent read failure is expected behaviour. The driver raises RuntimeError on a checksum or timing failure and the caller must retry on the next cycle.",
+            "A successful call can still return None for either value. Both temperature and humidity must be checked for None before publishing.",
+            "Polling faster than every 2 seconds returns stale or failed reads.",
+            "use_pulseio must be false on Raspberry Pi. With pulseio enabled the read path fails continuously under load.",
+            "Sustained failure across many consecutive cycles indicates wiring rather than the expected intermittency."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": "Raspberry Pi",
+            "os": null
+        }
+    }
+}

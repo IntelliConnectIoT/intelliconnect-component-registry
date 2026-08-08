@@ -1,0 +1,124 @@
+{
+    "key": "scd41",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "SCD41 CO2 Sensor",
+        "description": "Photoacoustic NDIR CO2 sensor with on-chip temperature and humidity over I2C. Ideal for indoor air quality monitoring.",
+        "sensor_type": "gas",
+        "protocol": "i2c",
+        "manufacturer": "Sensirion",
+        "model_number": "SCD41",
+        "datasheet_url": "https://sensirion.com/media/documents/48C4B7FB/64C134E7/Sensirion_SCD4x_Datasheet.pdf",
+        "read_interval_seconds": 30,
+        "readings": [
+            {
+                "slug": "co2",
+                "device_class": "carbon_dioxide",
+                "label": "CO2 Concentration",
+                "unit": "parts per million",
+                "unit_symbol": "ppm",
+                "data_type": "float",
+                "range_min": 400,
+                "range_max": 5000,
+                "decimal_places": 0,
+                "threshold_warn_low": null,
+                "threshold_warn_high": 1000,
+                "threshold_crit_low": null,
+                "threshold_crit_high": 2000
+            },
+            {
+                "slug": "temperature",
+                "device_class": "temperature",
+                "label": "Temperature",
+                "unit": "degrees celsius",
+                "unit_symbol": "°C",
+                "data_type": "float",
+                "range_min": -10,
+                "range_max": 60,
+                "decimal_places": 1,
+                "threshold_warn_low": 10,
+                "threshold_warn_high": 30,
+                "threshold_crit_low": 0,
+                "threshold_crit_high": 40
+            },
+            {
+                "slug": "humidity",
+                "device_class": "humidity",
+                "label": "Relative Humidity",
+                "unit": "percent",
+                "unit_symbol": "%",
+                "data_type": "float",
+                "range_min": 0,
+                "range_max": 100,
+                "decimal_places": 1,
+                "threshold_warn_low": 30,
+                "threshold_warn_high": 70,
+                "threshold_crit_low": 20,
+                "threshold_crit_high": 85
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "scd41"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "i2c",
+        "connection": {
+            "pins": [
+                {
+                    "role": "sda",
+                    "required": true,
+                    "notes": null
+                },
+                {
+                    "role": "scl",
+                    "required": true,
+                    "notes": null
+                }
+            ],
+            "supply_voltage": "3.3V",
+            "i2c_addresses": [
+                "0x62"
+            ],
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.scd41",
+            "pip_packages": [
+                "adafruit-circuitpython-scd4x"
+            ],
+            "apt_packages": [],
+            "init": {
+                "class": "adafruit_scd4x.SCD4X",
+                "args": {
+                    "i2c": "board.I2C()"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 5,
+            "read_timeout_seconds": 10,
+            "warmup_seconds": 60
+        },
+        "failure_modes": [
+            "Periodic measurement must be started explicitly after power on. Reading before start_periodic_measurement returns no data.",
+            "One measurement every 5 seconds in periodic mode. Polling faster returns the same sample repeatedly.",
+            "Automatic self-calibration assumes the sensor sees fresh air regularly. In a permanently occupied or sealed space it drifts the baseline downward and must be disabled.",
+            "Readings are unusable for the first minute after power on."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

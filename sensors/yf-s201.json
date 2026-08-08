@@ -1,0 +1,90 @@
+{
+    "key": "yf-s201",
+    "kind": "sensor",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "YF-S201 Water Flow Sensor",
+        "description": "Hall-effect water flow sensor. Outputs pulses proportional to flow rate. GPIO interrupt counting.",
+        "sensor_type": "fluid",
+        "protocol": "gpio",
+        "manufacturer": null,
+        "model_number": "YF-S201",
+        "datasheet_url": null,
+        "read_interval_seconds": 10,
+        "readings": [
+            {
+                "slug": "flow-rate",
+                "device_class": "volume_flow_rate",
+                "label": "Flow Rate",
+                "unit": "litres per minute",
+                "unit_symbol": "L/min",
+                "data_type": "float",
+                "range_min": 1,
+                "range_max": 30,
+                "decimal_places": 2,
+                "threshold_warn_low": null,
+                "threshold_warn_high": 25,
+                "threshold_crit_low": null,
+                "threshold_crit_high": 30
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "yf-s201"
+        ]
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "gpio-pulse-count",
+        "connection": {
+            "pins": [
+                {
+                    "role": "signal",
+                    "required": true,
+                    "notes": "Open collector output. Requires a pull-up and level shifting or division from 5V to 3.3V."
+                }
+            ],
+            "supply_voltage": "5V",
+            "level_shift_required": "Required on signal"
+        },
+        "runtime": {
+            "python_module": "drivers.yfs201",
+            "pip_packages": [
+                "gpiod"
+            ],
+            "apt_packages": [
+                "python3-libgpiod"
+            ],
+            "init": {
+                "class": "drivers.yfs201.YFS201",
+                "args": {
+                    "chip": "{gpio_chip}",
+                    "line": "{signal_pin}",
+                    "pulses_per_litre": "{pulses_per_litre}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": 1,
+            "read_timeout_seconds": null,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Output swings to 5V and must be divided or level shifted before a Raspberry Pi GPIO input.",
+            "Flow rate is derived from pulse frequency counted over a window. Polling the pin returns a level, not a rate, and yields nothing useful.",
+            "The pulses per litre constant varies between units and with flow rate. The nominal figure is an approximation and per-unit calibration is required for volume totals.",
+            "Below the minimum rated flow the impeller stalls and reports zero rather than a small flow."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}

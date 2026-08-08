@@ -1,0 +1,90 @@
+{
+    "key": "buzzer-active",
+    "kind": "actuator",
+    "revision": 1,
+    "status": "draft",
+    "source": "platform-seed",
+    "platform": {
+        "name": "Active Buzzer Module",
+        "description": "Active buzzer with internal oscillator. Simple on/off GPIO control. Fixed frequency tone. 3.3V-5V.",
+        "actuator_type": "buzzer",
+        "protocol": "gpio",
+        "manufacturer": null,
+        "model_number": "BUZZER-ACTIVE",
+        "datasheet_url": null,
+        "command_topic_suffix": "command/buzzer",
+        "response_topic_suffix": "response/buzzer",
+        "states": [
+            {
+                "command": "ON",
+                "label": "On",
+                "description": "Activate buzzer",
+                "payload": "ON",
+                "sort_order": 1,
+                "parameter": null
+            },
+            {
+                "command": "OFF",
+                "label": "Off",
+                "description": "Deactivate buzzer",
+                "payload": "OFF",
+                "sort_order": 2,
+                "parameter": null
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "buzzer-active"
+        ],
+        "device_class": "siren"
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "gpio-digital",
+        "connection": {
+            "pins": [
+                {
+                    "role": "signal",
+                    "required": true,
+                    "notes": null
+                }
+            ],
+            "supply_voltage": "3.3V or 5V",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.gpio_switch",
+            "pip_packages": [
+                "gpiod"
+            ],
+            "apt_packages": [
+                "python3-libgpiod"
+            ],
+            "init": {
+                "class": "drivers.gpio_switch.GPIOSwitch",
+                "args": {
+                    "chip": "{gpio_chip}",
+                    "line": "{control_pin}",
+                    "active_low": "{active_low}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": null,
+            "read_timeout_seconds": null,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "Contains its own oscillator and produces one fixed pitch. It cannot play tones and a frequency argument has no effect."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null
+        }
+    }
+}
