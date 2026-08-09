@@ -1,0 +1,170 @@
+{
+    "key": "esp32-h2-devkitm-1",
+    "kind": "board",
+    "revision": 1,
+    "status": "draft",
+    "source": "authored",
+    "platform": {
+        "name": "ESP32-H2-DevKitM-1",
+        "description": "802.15.4 and BLE 5 with no Wi-Fi radio at all. Built for Thread, Zigbee and Matter end devices.",
+        "board_type": "Microcontroller",
+        "manufacturer": "Espressif",
+        "model_number": "ESP32-H2-DevKitM-1",
+        "datasheet_url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32h2/hw-reference/esp32h2/user-guide-devkitm-1.html",
+        "cpu": "RISC-V single-core 32-bit @ 96MHz",
+        "ram": "320KB SRAM",
+        "storage": "4MB Flash",
+        "operating_voltage": "3.3V",
+        "gpio_pins": 19,
+        "pwm_channels": 6,
+        "adc_channels": 5,
+        "dac_channels": 0,
+        "dimensions_mm": null,
+        "weight_g": null,
+        "has_npu": false,
+        "has_gpu": false,
+        "has_tpu": false,
+        "operating_systems": [
+            {
+                "name": "ESP-IDF"
+            },
+            {
+                "name": "Arduino Core"
+            }
+        ],
+        "communication_chips": [
+            {
+                "chip_model": "ESP32-H2",
+                "protocol": "Bluetooth",
+                "standard": "5.3 LE"
+            },
+            {
+                "chip_model": "ESP32-H2",
+                "protocol": "802.15.4",
+                "standard": "Thread, Zigbee and Matter"
+            }
+        ],
+        "serial_protocols": [
+            {
+                "protocol": "I2C",
+                "count": 2
+            },
+            {
+                "protocol": "SPI",
+                "count": 2
+            },
+            {
+                "protocol": "UART",
+                "count": 2
+            },
+            {
+                "protocol": "I2S",
+                "count": 1
+            }
+        ],
+        "interfaces": [
+            {
+                "type": "USB-C",
+                "count": 2
+            },
+            {
+                "type": "2.54mm header",
+                "count": 2
+            }
+        ],
+        "power": [
+            {
+                "source": "USB",
+                "voltage_min": 5,
+                "voltage_max": 5
+            },
+            {
+                "source": "5V pin",
+                "voltage_min": 5,
+                "voltage_max": 5
+            },
+            {
+                "source": "3V3 pin",
+                "voltage_min": 3.3,
+                "voltage_max": 3.3
+            }
+        ]
+    },
+    "harness": {
+        "provisioning_model": "arduino-sketch",
+        "supported_provisioning_models": [
+            "arduino-sketch",
+            "vendor-firmware"
+        ],
+        "component_attachment": "gpio-header",
+        "flash": {
+            "method": "usb-native",
+            "tool": "esptool.py",
+            "port_hint": "/dev/ttyACM0",
+            "baud": 921600,
+            "notes": "The SoC exposes USB Serial/JTAG directly, so no bridge chip is involved. A firmware that reconfigures those pins loses the port until the board is put back into download mode by holding BOOT while tapping RESET."
+        },
+        "transport": {
+            "network": [
+                "bluetooth",
+                "thread",
+                "zigbee"
+            ],
+            "mqtt_client": null,
+            "tls": null,
+            "ota": true,
+            "notes": "No Wi-Fi and no Ethernet. The device joins a Thread or Zigbee network and the platform sees it through a border router, which has to exist before the board is any use."
+        },
+        "runtime": {
+            "os_family": null,
+            "python3": false,
+            "package_manager": null,
+            "service_manager": null
+        },
+        "gpio": {
+            "library": null,
+            "pin_scheme": "gpio",
+            "notes": "Almost every pin is routable to almost any peripheral through the GPIO matrix, so a driver binds to a pin number chosen at deploy time rather than to a fixed function. The strapping pins and the pins bonded to on-package flash are the exceptions and must not be used."
+        },
+        "probe": {
+            "model_file": null,
+            "overlay_file": null,
+            "commands": [
+                "arduino-cli board list",
+                "arduino-cli board details --fqbn <fqbn>"
+            ]
+        },
+        "local_inference": {
+            "viable": false,
+            "accelerator": null,
+            "usable_memory_gb": null,
+            "llm": {
+                "viable": false,
+                "max_params_b": null,
+                "max_model_size_gb": null,
+                "quantisation": [],
+                "runtimes": [],
+                "notes": "Kilobytes of RAM. A general language model does not run here and never will. Send the reading to something that can."
+            },
+            "tinyml": {
+                "viable": false,
+                "frameworks": [],
+                "notes": "The Thread or Zigbee stack takes most of the flash and most of the RAM."
+            },
+            "notes": "Read the transport block before choosing this board. It has no Wi-Fi, so it cannot reach an MQTT broker on its own under any configuration."
+        },
+        "toolchains": [
+            "ESP-IDF",
+            "Arduino IDE",
+            "Arduino CLI",
+            "PlatformIO"
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
+        }
+    }
+}

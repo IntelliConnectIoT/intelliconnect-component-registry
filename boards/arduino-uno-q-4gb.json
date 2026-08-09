@@ -83,9 +83,28 @@
     },
     "harness": {
         "provisioning_model": "linux-agent",
+        "supported_provisioning_models": [
+            "linux-agent",
+            "arduino-sketch"
+        ],
         "component_attachment": "gpio-header",
-        "supported": true,
-        "blocked_reason": null,
+        "flash": {
+            "method": "emmc",
+            "tool": "Arduino App Lab",
+            "port_hint": "/dev/ttyACM0",
+            "baud": null,
+            "notes": "Debian is pre-installed on eMMC, so the Linux side is provisioned over the network like any other single board computer. The STM32U585 is flashed separately over USB when a sketch is used."
+        },
+        "transport": {
+            "network": [
+                "wifi",
+                "bluetooth"
+            ],
+            "mqtt_client": "paho-mqtt",
+            "tls": true,
+            "ota": true,
+            "notes": "The Linux side owns the network connection. A sketch on the STM32 reaches the broker through the Linux side, not directly."
+        },
         "runtime": {
             "os_family": "debian",
             "python3": true,
@@ -95,7 +114,7 @@
         "gpio": {
             "library": null,
             "pin_scheme": null,
-            "notes": "Debian runs on the QRB2210 application processor. The UNO headers are driven by the STM32U585 microcontroller. Whether the Linux side addresses header pins directly or through an MCU bridge is unconfirmed."
+            "notes": "Two processors on one board. Debian runs on the QRB2210 application processor; the UNO headers are wired to the STM32U585 microcontroller, not to the QRB2210. Linux reaches header pins through the Arduino Bridge to the STM32 rather than through a local gpiochip, so a driver written against libgpiod pin numbers does not transfer unchanged. The exact bridge API and pin numbering are unconfirmed and must be established on hardware before any pin-based driver is marked verified."
         },
         "probe": {
             "model_file": "/proc/device-tree/model",
@@ -114,13 +133,45 @@
             ]
         },
         "local_inference": {
-            "viable": null,
-            "notes": "Carries an NPU. Capability and toolchain for local inference are unconfirmed."
+            "viable": true,
+            "accelerator": "npu",
+            "usable_memory_gb": 4,
+            "llm": {
+                "viable": true,
+                "max_params_b": 3,
+                "max_model_size_gb": 2,
+                "quantisation": [
+                    "q4_k_m",
+                    "q4_0"
+                ],
+                "runtimes": [
+                    "llama.cpp"
+                ],
+                "notes": "4GB shared between the OS and the model. A 1B to 3B model at 4-bit is the realistic ceiling. Whether the Hexagon NPU can be used for language models through the Qualcomm stack on this board is unconfirmed."
+            },
+            "tinyml": {
+                "viable": true,
+                "frameworks": [
+                    "TensorFlow Lite",
+                    "ONNX Runtime",
+                    "Qualcomm QNN"
+                ],
+                "notes": "The QRB2210 carries a Hexagon DSP and Adreno GPU. Access through QNN on the shipped Debian image is unconfirmed."
+            },
+            "notes": "The most capable board here for its size and price, and the only one that is both a Linux host and a microcontroller in one package."
         },
+        "toolchains": [
+            "Arduino App Lab",
+            "Arduino CLI",
+            "PlatformIO",
+            "Docker"
+        ],
         "verified": {
             "by": null,
             "date": null,
-            "os": null
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
         }
     }
 }

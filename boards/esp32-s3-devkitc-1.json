@@ -1,32 +1,35 @@
 {
-    "key": "arduino-nicla-vision",
+    "key": "esp32-s3-devkitc-1",
     "kind": "board",
     "revision": 1,
     "status": "draft",
-    "source": "platform-seed",
+    "source": "authored",
     "platform": {
-        "name": "Arduino® Nicla Vision",
-        "description": "Edge AI vision board with 2MP camera.",
-        "board_type": "AI / Edge Computing",
-        "manufacturer": "Arduino",
-        "model_number": "ABX00051",
-        "datasheet_url": null,
-        "cpu": "STM32H747 Dual Core",
-        "ram": "1MB SRAM",
-        "storage": "2MB Flash",
+        "name": "ESP32-S3-DevKitC-1",
+        "description": "Dual core ESP32-S3 with vector instructions for machine learning, native USB and BLE 5. The most capable Espressif part for on-device inference.",
+        "board_type": "Microcontroller",
+        "manufacturer": "Espressif",
+        "model_number": "ESP32-S3-DevKitC-1",
+        "datasheet_url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/hw-reference/esp32s3/user-guide-devkitc-1.html",
+        "cpu": "Xtensa dual-core LX7 @ 240MHz",
+        "ram": "512KB SRAM plus 8MB PSRAM",
+        "storage": "8MB Flash",
         "operating_voltage": "3.3V",
-        "gpio_pins": 10,
-        "pwm_channels": 2,
-        "adc_channels": 2,
+        "gpio_pins": 45,
+        "pwm_channels": 8,
+        "adc_channels": 20,
         "dac_channels": 0,
-        "dimensions_mm": "22.86 x 22.86",
-        "weight_g": 2,
+        "dimensions_mm": null,
+        "weight_g": null,
         "has_npu": false,
-        "has_gpu": true,
+        "has_gpu": false,
         "has_tpu": false,
         "operating_systems": [
             {
-                "name": "Arduino IDE"
+                "name": "ESP-IDF"
+            },
+            {
+                "name": "Arduino Core"
             },
             {
                 "name": "MicroPython"
@@ -34,41 +37,59 @@
         ],
         "communication_chips": [
             {
-                "chip_model": "Murata 1DX",
+                "chip_model": "ESP32-S3",
                 "protocol": "Wi-Fi",
                 "standard": "802.11b/g/n"
             },
             {
-                "chip_model": "Murata 1DX",
+                "chip_model": "ESP32-S3",
                 "protocol": "Bluetooth",
-                "standard": "4.2"
+                "standard": "5.0 LE"
             }
         ],
         "serial_protocols": [
             {
                 "protocol": "I2C",
-                "count": 1
+                "count": 2
             },
             {
                 "protocol": "SPI",
-                "count": 1
+                "count": 4
+            },
+            {
+                "protocol": "UART",
+                "count": 3
+            },
+            {
+                "protocol": "I2S",
+                "count": 2
             }
         ],
         "interfaces": [
             {
-                "type": "Camera GC2145",
-                "count": 1
+                "type": "USB-C",
+                "count": 2
             },
             {
-                "type": "Micro USB",
-                "count": 1
+                "type": "2.54mm header",
+                "count": 2
             }
         ],
         "power": [
             {
-                "source": "Micro USB",
+                "source": "USB",
                 "voltage_min": 5,
                 "voltage_max": 5
+            },
+            {
+                "source": "5V pin",
+                "voltage_min": 5,
+                "voltage_max": 5
+            },
+            {
+                "source": "3V3 pin",
+                "voltage_min": 3.3,
+                "voltage_max": 3.3
             }
         ]
     },
@@ -76,15 +97,16 @@
         "provisioning_model": "micropython",
         "supported_provisioning_models": [
             "micropython",
-            "arduino-sketch"
+            "arduino-sketch",
+            "vendor-firmware"
         ],
         "component_attachment": "gpio-header",
         "flash": {
-            "method": "dfu",
-            "tool": "dfu-util",
+            "method": "usb-native",
+            "tool": "esptool.py",
             "port_hint": "/dev/ttyACM0",
-            "baud": null,
-            "notes": "Double-tap reset for the bootloader. OpenMV IDE flashes its own MicroPython build and will overwrite an Arduino sketch."
+            "baud": 921600,
+            "notes": "The SoC exposes USB Serial/JTAG directly, so no bridge chip is involved. A firmware that reconfigures those pins loses the port until the board is put back into download mode by holding BOOT while tapping RESET."
         },
         "transport": {
             "network": [
@@ -94,7 +116,7 @@
             "mqtt_client": "umqtt.simple",
             "tls": true,
             "ota": true,
-            "notes": "Murata 1DX module. 802.11b/g/n and Bluetooth 4.2."
+            "notes": "Connects to the broker directly over Wi-Fi. TLS works but the handshake is the largest memory spike in a typical device program, so size the heap around it rather than around steady state."
         },
         "runtime": {
             "os_family": null,
@@ -104,8 +126,8 @@
         },
         "gpio": {
             "library": "machine",
-            "pin_scheme": "arduino",
-            "notes": "Ten castellated pads, not a pin header. Soldering or a carrier is required to attach anything."
+            "pin_scheme": "gpio",
+            "notes": "Almost every pin is routable to almost any peripheral through the GPIO matrix, so a driver binds to a pin number chosen at deploy time rather than to a fixed function. The strapping pins and the pins bonded to on-package flash are the exceptions and must not be used."
         },
         "probe": {
             "model_file": null,
@@ -133,20 +155,20 @@
             "tinyml": {
                 "viable": true,
                 "frameworks": [
-                    "OpenMV",
+                    "ESP-DL",
                     "TensorFlow Lite Micro",
                     "Edge Impulse"
                 ],
-                "notes": "GC2145 2MP camera with an on-board time of flight sensor and microphone. Designed for vision inference at the edge."
+                "notes": "Vector extensions give roughly an order of magnitude over the original ESP32 on quantised convolutions. With 8MB PSRAM a small image classifier is genuinely practical."
             },
-            "notes": "The camera is the reason to choose this board. Treat it as a vision sensor that reports results, not as a general host."
+            "notes": "Pick this one when the device has to decide something itself rather than ship every reading to the platform."
         },
         "toolchains": [
             "MicroPython",
-            "OpenMV IDE",
+            "ESP-IDF",
             "Arduino IDE",
             "Arduino CLI",
-            "Edge Impulse"
+            "PlatformIO"
         ],
         "verified": {
             "by": null,

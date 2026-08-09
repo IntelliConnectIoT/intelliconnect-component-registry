@@ -104,7 +104,9 @@
             "by": null,
             "date": null,
             "board": "Raspberry Pi",
-            "os": null
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
         }
     }
 }

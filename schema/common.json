@@ -13,7 +13,10 @@
             "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
         },
         "status": {
-            "enum": ["unverified", "draft", "verified", "unsupported"]
+            "enum": ["unverified", "draft", "verified"]
+        },
+        "provisioningModel": {
+            "enum": ["linux-agent", "micropython", "arduino-sketch", "vendor-firmware"]
         },
         "dataType": {
             "enum": ["float", "integer", "boolean", "string", "enum"]
@@ -38,7 +41,9 @@
                 "by": { "$ref": "#/$defs/nullableString" },
                 "date": { "type": ["string", "null"], "format": "date" },
                 "board": { "$ref": "#/$defs/nullableString" },
-                "os": { "$ref": "#/$defs/nullableString" }
+                "os": { "$ref": "#/$defs/nullableString" },
+                "reviewed_by": { "$ref": "#/$defs/nullableString" },
+                "evidence_url": { "$ref": "#/$defs/url" }
             },
             "required": ["by", "date", "os"],
             "additionalProperties": false

@@ -92,9 +92,28 @@
     },
     "harness": {
         "provisioning_model": "linux-agent",
+        "supported_provisioning_models": [
+            "linux-agent"
+        ],
         "component_attachment": "gpio-header",
-        "supported": true,
-        "blocked_reason": null,
+        "flash": {
+            "method": "sd-card",
+            "tool": "rpi-imager",
+            "port_hint": null,
+            "baud": null,
+            "notes": "The operating system is written to removable media on a host machine. The agent is installed after first boot over the network."
+        },
+        "transport": {
+            "network": [
+                "wifi",
+                "ethernet",
+                "bluetooth"
+            ],
+            "mqtt_client": "paho-mqtt",
+            "tls": true,
+            "ota": true,
+            "notes": "Gigabit Ethernet and dual-band Wi-Fi. The agent updates itself in place; no reflash is needed to change the device program."
+        },
         "runtime": {
             "os_family": "debian",
             "python3": true,
@@ -124,12 +143,46 @@
         },
         "local_inference": {
             "viable": true,
-            "notes": "CPU only. No GPU or NPU acceleration available."
+            "accelerator": "cpu",
+            "usable_memory_gb": 8,
+            "llm": {
+                "viable": true,
+                "max_params_b": 8,
+                "max_model_size_gb": 5.5,
+                "quantisation": [
+                    "q4_k_m",
+                    "q4_0",
+                    "q5_k_m"
+                ],
+                "runtimes": [
+                    "llama.cpp",
+                    "ollama"
+                ],
+                "notes": "CPU inference on four Cortex-A76 cores. A 7B or 8B model at 4-bit fits in memory and runs at conversational-but-slow speed. Nothing larger is worth attempting."
+            },
+            "tinyml": {
+                "viable": true,
+                "frameworks": [
+                    "TensorFlow Lite",
+                    "ONNX Runtime",
+                    "Hailo-8L via the AI Kit"
+                ],
+                "notes": "The M.2 AI Kit adds a Hailo accelerator over PCIe for vision workloads. Not fitted by default."
+            },
+            "notes": "No GPU or NPU on the board itself. Memory size decides what runs, which is why the 8GB and 16GB variants are separate entries."
         },
+        "toolchains": [
+            "Docker",
+            "llama.cpp",
+            "Ollama",
+            "libgpiod"
+        ],
         "verified": {
             "by": null,
             "date": null,
-            "os": null
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
         }
     }
 }

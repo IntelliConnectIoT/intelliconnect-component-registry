@@ -80,9 +80,13 @@ To claim verification, fill the `verified` block with who ran it, the date, the 
 and the operating system. "Works on a Pi" is not enough. Board revisions and OS versions
 change GPIO behaviour.
 
-**Verification is not self service.** A maintainer who is not the contributor confirms the
-entry before it is marked verified. This is deliberately inconvenient. It is the only thing
-standing between the registry and a field that quietly damages someone's hardware.
+**Two people sign an entry off.** `verified.by` is who ran it on hardware,
+`verified.reviewed_by` is who confirmed that work, and they must be different people. A
+maintainer confirms a contributor's entry before it reaches `verified`.
+
+A maintainer who owns the hardware may self-verify with `reviewed_by` null and
+`verified.evidence_url` linking the captured probe output, broker log and wiring
+photograph. The evidence is public and stands in place of the reviewer.
 
 Submitting a `draft` entry is genuinely useful on its own. Someone else with the component
 can verify it later. Do not mark your own entry verified to get it merged faster.
@@ -90,11 +94,21 @@ can verify it later. Do not mark your own entry verified to get it merged faster
 ## Boards
 
 Board entries carry a `harness` block instead of a `driver` block, and the first question
-it answers is whether the board can host a provisioning agent at all.
+it answers is how a device program gets onto the board and how it then reaches the
+platform.
 
-Be honest about `unsupported`. A microcontroller that cannot run a general purpose
-operating system is not a gap in the registry to be worked around later. It is a permanent
-fact, and recording it saves the next person the same investigation.
+Pick the `provisioning_model` that matches how the board is actually programmed, and list
+every model that works in `supported_provisioning_models`. A microcontroller is a first
+class target here. There is no status or flag that excludes one, and a contribution will
+not be rejected for adding a board that does not run Linux.
+
+Be exact about `transport`. A board with no Wi-Fi cannot reach an MQTT broker on its own,
+and `mqtt_client: null` with a note naming the gateway or border router it needs is the
+correct entry. Leaving it looking connectable is the failure people lose a weekend to.
+
+Be honest about `local_inference`. `llm.viable: false` with a note explaining the limit is
+a complete and useful answer. Do not leave the block empty because a board cannot run a
+language model, and do not claim a model size you have not run.
 
 `gpio.library` is board specific even between boards with identical pinouts. Do not copy it
 from a similar board. Confirm it.

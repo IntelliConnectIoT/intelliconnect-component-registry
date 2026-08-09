@@ -2,7 +2,7 @@
     "key": "arduino-nicla-voice",
     "kind": "board",
     "revision": 1,
-    "status": "unsupported",
+    "status": "draft",
     "source": "platform-seed",
     "platform": {
         "name": "Arduino® Nicla Voice",
@@ -61,10 +61,28 @@
         ]
     },
     "harness": {
-        "provisioning_model": "firmware",
+        "provisioning_model": "arduino-sketch",
+        "supported_provisioning_models": [
+            "arduino-sketch",
+            "vendor-firmware"
+        ],
         "component_attachment": "gpio-header",
-        "supported": false,
-        "blocked_reason": "Microcontroller class. No general purpose operating system, and insufficient memory to host Python and an MQTT client. Requires cross-compiled firmware built and flashed from a host machine.",
+        "flash": {
+            "method": "dfu",
+            "tool": "dfu-util",
+            "port_hint": "/dev/ttyACM0",
+            "baud": null,
+            "notes": "The nRF52832 takes the sketch. The Syntiant NDP120 takes a separate model binary produced by Edge Impulse, flashed as its own step."
+        },
+        "transport": {
+            "network": [
+                "bluetooth"
+            ],
+            "mqtt_client": null,
+            "tls": null,
+            "ota": false,
+            "notes": "Bluetooth Low Energy only. No Wi-Fi and no Ethernet, so it cannot reach an MQTT broker on its own. It must pair with a gateway that does. Plan the gateway before buying the board."
+        },
         "runtime": {
             "os_family": null,
             "python3": false,
@@ -73,26 +91,50 @@
         },
         "gpio": {
             "library": null,
-            "pin_scheme": null,
-            "notes": "Pin access is compiled into the firmware image, not configured at runtime."
+            "pin_scheme": "arduino",
+            "notes": "Castellated pads only. The board is built around its own microphone and IMU rather than around attaching external components."
         },
         "probe": {
             "model_file": null,
             "overlay_file": null,
-            "commands": []
+            "commands": [
+                "arduino-cli board list",
+                "arduino-cli board details --fqbn <fqbn>"
+            ]
         },
         "local_inference": {
-            "viable": false,
-            "notes": "Insufficient memory for a general language model."
+            "viable": true,
+            "accelerator": "npu",
+            "usable_memory_gb": null,
+            "llm": {
+                "viable": false,
+                "max_params_b": null,
+                "max_model_size_gb": null,
+                "quantisation": [],
+                "runtimes": [],
+                "notes": "Kilobytes of RAM. A general language model does not run here and never will. Send the reading to something that can."
+            },
+            "tinyml": {
+                "viable": true,
+                "frameworks": [
+                    "Edge Impulse",
+                    "Syntiant NDP120 SDK"
+                ],
+                "notes": "The NDP120 is a dedicated always-on neural decision processor. It runs wake-word and audio event models at microamp power levels, which is something no other board here can do."
+            },
+            "notes": "Purpose-built for always-on audio inference. The model is trained off-device and deployed as a binary."
         },
         "toolchains": [
             "Arduino IDE",
+            "Arduino CLI",
             "Edge Impulse"
         ],
         "verified": {
             "by": null,
             "date": null,
-            "os": null
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
         }
     }
 }

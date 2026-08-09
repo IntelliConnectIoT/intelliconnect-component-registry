@@ -74,9 +74,19 @@ uname -m
 
 Keep this output. It goes into the entry verbatim.
 
-Boards whose `harness.provisioning_model` is `firmware` do not run a general purpose
-operating system and none of this applies to them. They are recorded `unsupported`
-permanently and are not verified through this process.
+This step assumes a `linux-agent` board. Microcontrollers are verified too, just
+differently: there is no shell to collect output from, so flash the board with the
+`provisioning_model` the entry declares and record what the toolchain reports instead.
+
+- `micropython` — flash the MicroPython build, connect over the REPL and keep the output
+  of the commands in `harness.probe`. `os.uname()` and `gc.mem_free()` are the equivalent
+  of `/etc/os-release` and free memory
+- `arduino-sketch` — record the `arduino-cli board list` output and the FQBN that compiled
+  and uploaded successfully
+- `vendor-firmware` — record the SDK and the version that produced a working image
+
+Then confirm the board actually reached the broker. For a microcontroller that is the real
+test, and it is the step most likely to fail.
 
 ## Step 2. Read the entry before you wire anything
 
@@ -180,10 +190,16 @@ Then confirm:
 - `harness.gpio.pin_scheme` matches the numbering that library actually expects, `bcm` and `board` being different schemes
 - Where `harness.gpio` is null and the board has a header, that is an unfilled gap rather than a statement that there is no GPIO. Filling it is a useful contribution
 - The files named in `harness.probe` exist at those paths on this board
-- `harness.local_inference` is honest about what the board can do
+- `harness.local_inference` is honest about what the board can do. If it claims a model
+  size, run a model that size before signing it off
+- `harness.transport.mqtt_client` is either a client you got connected to a broker on this
+  board, or null with a note naming the gateway it needs
+- `harness.provisioning_model` is the path you actually used, and every entry in
+  `supported_provisioning_models` is one you know works
 
-A board marked `unsupported` is not a gap to be worked around. It records that the board
-structurally cannot host a provisioning agent, and that fact is permanent.
+Verify the board on the pipeline it declares. A microcontroller that flashes, connects and
+publishes is verified, exactly like a Linux board that installs the agent and publishes.
+Nothing here is signed off as unsupportable.
 
 ## Step 4. Fill in the verified block
 
@@ -225,16 +241,30 @@ Open a pull request containing the entry file and nothing else. In the descripti
 
 Raw logs are welcome. A ten minute capture of readings is more convincing than a summary.
 
-## Verification is not self service
+## Who signs an entry off
 
-**A maintainer who is not the contributor confirms an entry before it is marked verified.**
+Two fields, and they must name different people:
 
-This is deliberately inconvenient. It is the only thing standing between this registry and
-a field that quietly damages someone's hardware. Do not mark your own newly authored entry
-verified to get it merged faster.
+- `verified.by` — who ran the component on real hardware
+- `verified.reviewed_by` — who confirmed that work
 
-Verifying somebody else's `draft` entry is therefore a genuinely valuable contribution, and
-it is the fastest way to move an entry to `verified`.
+A contributor's entry is confirmed by a maintainer before it reaches `verified`. Do not
+mark your own newly authored entry verified to get it merged faster.
+
+Verifying somebody else's `draft` entry is a genuinely valuable contribution, and it is
+the fastest way to move an entry to `verified`.
+
+### Maintainer self-verification
+
+A maintainer who owns the hardware may verify their own entry with `reviewed_by` left
+null, provided `verified.evidence_url` links the captured evidence:
+
+- The probe output for the board, or the REPL and toolchain output for a microcontroller
+- A broker log showing readings arriving, with timestamps
+- A photograph of the wiring as tested
+
+The evidence is public and stands in place of the second person. `tools/validate.py`
+rejects a `verified` entry that has neither a reviewer nor an evidence URL.
 
 ## If the entry is wrong
 

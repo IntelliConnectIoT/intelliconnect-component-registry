@@ -170,8 +170,6 @@ def validate_status():
                 fail(rel, "status is unverified but a block is present")
             if status in ("draft", "verified") and not block:
                 fail(rel, "status is %s but there is no block" % status)
-            if status == "unsupported" and kind != "board":
-                fail(rel, "only boards may be unsupported")
 
             if not block:
                 continue
@@ -188,11 +186,47 @@ def validate_status():
             if status != "verified" and named:
                 fail(rel, "verified.by is set but status is '%s'" % status)
 
-            if kind == "board":
-                if block.get("supported") is False and status != "unsupported":
-                    fail(rel, "harness is not supported but status is '%s'" % status)
-                if block.get("supported") is False and not block.get("blocked_reason"):
-                    fail(rel, "unsupported board has no blocked_reason")
+            reviewer = verified.get("reviewed_by")
+            evidence = verified.get("evidence_url")
+
+            if status == "verified" and reviewer and named and reviewer == named:
+                fail(rel, "verified.reviewed_by is the same person as verified.by")
+            if status == "verified" and not reviewer and not evidence:
+                fail(rel, "verified with no reviewer needs verified.evidence_url")
+            if status != "verified" and reviewer:
+                fail(rel, "verified.reviewed_by is set but status is '%s'" % status)
+
+            if kind != "board":
+                continue
+
+            primary = block.get("provisioning_model")
+            offered = block.get("supported_provisioning_models") or []
+
+            if primary not in offered:
+                fail(rel, "provisioning_model '%s' is not in supported_provisioning_models" % primary)
+            if not block.get("toolchains"):
+                fail(rel, "no toolchains listed")
+
+            runtime = block.get("runtime") or {}
+            if primary == "linux-agent" and not runtime.get("python3"):
+                fail(rel, "linux-agent board does not declare python3")
+            if primary == "linux-agent" and not runtime.get("service_manager"):
+                fail(rel, "linux-agent board does not declare a service_manager")
+            if primary != "linux-agent" and runtime.get("service_manager"):
+                fail(rel, "%s board declares a service_manager" % primary)
+
+            if primary == "linux-agent" and not (block.get("probe") or {}).get("commands"):
+                fail(rel, "linux-agent board has no probe commands")
+
+            transport = block.get("transport") or {}
+            if not transport.get("network"):
+                fail(rel, "no network transport declared")
+            if not transport.get("mqtt_client"):
+                warn(rel, "no mqtt_client declared, so the platform has no way to talk to it")
+
+            flash = block.get("flash") or {}
+            if flash.get("method") in ("usb-serial", "usb-native", "dfu") and not flash.get("tool"):
+                fail(rel, "flash method '%s' with no tool" % flash.get("method"))
 
 
 def validate_badges():

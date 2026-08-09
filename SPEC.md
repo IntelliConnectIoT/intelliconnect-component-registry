@@ -1,6 +1,6 @@
 # Registry specification
 
-Schema version 1.
+Schema version 2.
 
 This defines what a valid entry is, and what a tool consuming this registry must do.
 `schema/*.json` is the machine-readable part. This document covers the rules a schema
@@ -33,7 +33,8 @@ Every entry carries exactly one status.
 | `unverified` | Catalogue metadata only, no driver or harness block | Refuse |
 | `draft` | Block authored, not run on real hardware | Refuse |
 | `verified` | Block confirmed against the physical hardware by a named person | Provision |
-| `unsupported` | Board structurally cannot host a provisioning agent | Refuse, permanently |
+
+Status records verification progress only. No status excludes a board.
 
 Rules a schema cannot enforce, checked by `tools/validate.py`:
 
@@ -41,12 +42,58 @@ Rules a schema cannot enforce, checked by `tools/validate.py`:
 - `draft` and `verified` must have one
 - `verified` requires `verified.by`, `verified.date` and `verified.os` to be set
 - Any status other than `verified` must leave `verified.by` empty
-- `unsupported` applies to boards only, requires `harness.supported: false` and a
-  `blocked_reason`
+- `harness.provisioning_model` must appear in `harness.supported_provisioning_models`
+- Every board must list at least one toolchain and at least one network transport
+- A `linux-agent` board must declare `python3`, a `service_manager` and probe commands
+- A board that is not `linux-agent` must not declare a `service_manager`
+- A `usb-serial`, `usb-native` or `dfu` flash method must name the tool that performs it
 - The status in `index.json` must match the status in the entry file
 
-**Verification is not self service.** A maintainer who is not the contributor confirms an
-entry before it is marked `verified`. See [VERIFYING.md](VERIFYING.md).
+## Who signs an entry off
+
+Two fields record it. `verified.by` is who ran the component on real hardware.
+`verified.reviewed_by` is who confirmed that work. They must not be the same person.
+
+A contributor's entry is confirmed by a maintainer before it reaches `verified`.
+
+**Maintainer self-verification.** A maintainer who owns the hardware may verify their own
+entry with `reviewed_by` left null, provided `verified.evidence_url` links the captured
+evidence: probe output, a broker log showing readings arriving, and a photograph of the
+wiring. The evidence replaces the second person, and it is public. Without a reviewer and
+without evidence, an entry cannot be `verified`.
+
+See [VERIFYING.md](VERIFYING.md).
+
+## Provisioning models
+
+Every board declares one `provisioning_model` as its default and lists every model that
+works in `supported_provisioning_models`. All four are supported pipelines.
+
+| Model | How the program gets on | How it reaches the platform |
+| --- | --- | --- |
+| `linux-agent` | Agent installed as a service on a general purpose OS | `paho-mqtt` over the host network stack |
+| `micropython` | MicroPython flashed once, program pushed as source over USB or OTA | `umqtt.simple` |
+| `arduino-sketch` | Compiled with `arduino-cli` or PlatformIO, uploaded over USB | `PubSubClient` or the ESP-IDF MQTT client |
+| `vendor-firmware` | Manufacturer SDK: ESP-IDF, Gecko SDK, Syntiant NDP120 | Per SDK, sometimes not at all |
+
+A consumer selects the pipeline from `provisioning_model` and must not attempt a model the
+board does not list.
+
+`transport.mqtt_client` may be `null`, meaning the board reaches a broker only through a
+gateway or border router. The note must name what it needs.
+
+## Local inference
+
+`local_inference` records what a board runs on device. `llm` and `tinyml` are separate
+sub-blocks.
+
+- `llm.viable: false` still requires `notes` stating the limit
+- `max_params_b` is billions of parameters at the levels listed in `quantisation`, not at
+  full precision
+- `usable_memory_gb` is memory shared with the operating system. On unified memory it is
+  the whole figure and the note must say so
+- `accelerator` is `cuda`, `npu`, `gpu`, `dsp`, `cpu` or null. Record the accelerator even
+  where the shipped software stack cannot reach it, and say so in the notes
 
 ## Absent facts stay null
 

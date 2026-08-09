@@ -2,7 +2,7 @@
     "key": "arduino-nano-matter",
     "kind": "board",
     "revision": 1,
-    "status": "unsupported",
+    "status": "draft",
     "source": "platform-seed",
     "platform": {
         "name": "Arduino® Nano Matter",
@@ -70,10 +70,30 @@
         ]
     },
     "harness": {
-        "provisioning_model": "firmware",
+        "provisioning_model": "arduino-sketch",
+        "supported_provisioning_models": [
+            "arduino-sketch",
+            "vendor-firmware"
+        ],
         "component_attachment": "gpio-header",
-        "supported": false,
-        "blocked_reason": "Microcontroller class. No general purpose operating system, and insufficient memory to host Python and an MQTT client. Requires cross-compiled firmware built and flashed from a host machine.",
+        "flash": {
+            "method": "usb-serial",
+            "tool": "arduino-cli",
+            "port_hint": "/dev/ttyACM0",
+            "baud": 115200,
+            "notes": "Uploads over the USB-C port. Simplicity Commander is needed for the Silicon Labs bootloader and for factory reset."
+        },
+        "transport": {
+            "network": [
+                "thread",
+                "bluetooth",
+                "zigbee"
+            ],
+            "mqtt_client": null,
+            "tls": null,
+            "ota": true,
+            "notes": "802.15.4 and Bluetooth Low Energy, no Wi-Fi. It joins a Matter or Thread fabric and reaches the platform through a border router, never directly over MQTT."
+        },
         "runtime": {
             "os_family": null,
             "python3": false,
@@ -82,26 +102,48 @@
         },
         "gpio": {
             "library": null,
-            "pin_scheme": null,
-            "notes": "Pin access is compiled into the firmware image, not configured at runtime."
+            "pin_scheme": "arduino",
+            "notes": "Nano form factor headers. 22 digital pins on the MGM240S module."
         },
         "probe": {
             "model_file": null,
             "overlay_file": null,
-            "commands": []
+            "commands": [
+                "arduino-cli board list",
+                "arduino-cli board details --fqbn <fqbn>"
+            ]
         },
         "local_inference": {
             "viable": false,
-            "notes": "Insufficient memory for a general language model."
+            "accelerator": null,
+            "usable_memory_gb": null,
+            "llm": {
+                "viable": false,
+                "max_params_b": null,
+                "max_model_size_gb": null,
+                "quantisation": [],
+                "runtimes": [],
+                "notes": "Kilobytes of RAM. A general language model does not run here and never will. Send the reading to something that can."
+            },
+            "tinyml": {
+                "viable": false,
+                "frameworks": [],
+                "notes": "Matter and Thread stacks take most of the flash. Little room is left for a model."
+            },
+            "notes": "Chosen for protocol support, not for compute."
         },
         "toolchains": [
             "Arduino IDE",
-            "Silicon Labs Gecko SDK"
+            "Arduino CLI",
+            "Silicon Labs Gecko SDK",
+            "Simplicity Studio"
         ],
         "verified": {
             "by": null,
             "date": null,
-            "os": null
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
         }
     }
 }

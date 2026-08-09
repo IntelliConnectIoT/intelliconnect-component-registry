@@ -79,9 +79,27 @@
     },
     "harness": {
         "provisioning_model": "linux-agent",
+        "supported_provisioning_models": [
+            "linux-agent"
+        ],
         "component_attachment": "gpio-header",
-        "supported": true,
-        "blocked_reason": null,
+        "flash": {
+            "method": "sd-card",
+            "tool": "NVIDIA SDK Manager",
+            "port_hint": null,
+            "baud": null,
+            "notes": "JetPack is written to microSD or NVMe from a host machine. SDK Manager is required for NVMe and for recovery-mode flashing."
+        },
+        "transport": {
+            "network": [
+                "ethernet",
+                "wifi"
+            ],
+            "mqtt_client": "paho-mqtt",
+            "tls": true,
+            "ota": true,
+            "notes": "Wi-Fi requires an M.2 card; only Ethernet is fitted on the bare developer kit."
+        },
         "runtime": {
             "os_family": "ubuntu",
             "python3": true,
@@ -111,12 +129,50 @@
         },
         "local_inference": {
             "viable": true,
-            "notes": "CUDA capable via the integrated Ampere GPU."
+            "accelerator": "cuda",
+            "usable_memory_gb": 8,
+            "llm": {
+                "viable": true,
+                "max_params_b": 8,
+                "max_model_size_gb": 6,
+                "quantisation": [
+                    "q4_k_m",
+                    "awq",
+                    "int4",
+                    "fp16"
+                ],
+                "runtimes": [
+                    "llama.cpp",
+                    "ollama",
+                    "TensorRT-LLM",
+                    "vLLM"
+                ],
+                "notes": "1024 CUDA cores and 32 tensor cores with 8GB shared between CPU and GPU. The fastest local language model host in this registry. Super mode raises the power budget to 25W and must be enabled explicitly."
+            },
+            "tinyml": {
+                "viable": true,
+                "frameworks": [
+                    "TensorRT",
+                    "DeepStream",
+                    "ONNX Runtime",
+                    "TensorFlow"
+                ],
+                "notes": "Purpose-built for vision inference. Multiple camera streams at once is the intended workload."
+            },
+            "notes": "Memory is shared between CPU and GPU, so a model that fills the GPU starves the operating system."
         },
+        "toolchains": [
+            "JetPack",
+            "TensorRT",
+            "Docker",
+            "Jetson.GPIO"
+        ],
         "verified": {
             "by": null,
             "date": null,
-            "os": null
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
         }
     }
 }

@@ -98,10 +98,41 @@
         "harness": {
             "type": "object",
             "properties": {
-                "provisioning_model": { "enum": ["linux-agent", "firmware"] },
+                "provisioning_model": { "$ref": "common.json#/$defs/provisioningModel" },
+                "supported_provisioning_models": {
+                    "type": "array",
+                    "items": { "$ref": "common.json#/$defs/provisioningModel" },
+                    "minItems": 1,
+                    "uniqueItems": true
+                },
                 "component_attachment": { "enum": ["gpio-header", "usb-serial", "none"] },
-                "supported": { "type": "boolean" },
-                "blocked_reason": { "$ref": "common.json#/$defs/nullableString" },
+                "flash": {
+                    "type": "object",
+                    "properties": {
+                        "method": { "enum": ["sd-card", "emmc", "usb-serial", "usb-native", "dfu", "jtag", "vendor-tool"] },
+                        "tool": { "$ref": "common.json#/$defs/nullableString" },
+                        "port_hint": { "$ref": "common.json#/$defs/nullableString" },
+                        "baud": { "$ref": "common.json#/$defs/nullableInteger" },
+                        "notes": { "$ref": "common.json#/$defs/nullableString" }
+                    },
+                    "required": ["method", "tool", "port_hint", "notes"],
+                    "additionalProperties": false
+                },
+                "transport": {
+                    "type": "object",
+                    "properties": {
+                        "network": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "mqtt_client": { "$ref": "common.json#/$defs/nullableString" },
+                        "tls": { "type": ["boolean", "null"] },
+                        "ota": { "type": ["boolean", "null"] },
+                        "notes": { "$ref": "common.json#/$defs/nullableString" }
+                    },
+                    "required": ["network", "mqtt_client", "tls", "ota"],
+                    "additionalProperties": false
+                },
                 "runtime": {
                     "type": "object",
                     "properties": {
@@ -140,9 +171,43 @@
                     "type": "object",
                     "properties": {
                         "viable": { "type": ["boolean", "null"] },
+                        "accelerator": { "enum": ["cuda", "npu", "gpu", "dsp", "cpu", null] },
+                        "usable_memory_gb": { "$ref": "common.json#/$defs/nullableNumber" },
+                        "llm": {
+                            "type": "object",
+                            "properties": {
+                                "viable": { "type": ["boolean", "null"] },
+                                "max_params_b": { "$ref": "common.json#/$defs/nullableNumber" },
+                                "max_model_size_gb": { "$ref": "common.json#/$defs/nullableNumber" },
+                                "quantisation": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                },
+                                "runtimes": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                },
+                                "notes": { "$ref": "common.json#/$defs/nullableString" }
+                            },
+                            "required": ["viable", "max_params_b", "max_model_size_gb", "quantisation", "runtimes", "notes"],
+                            "additionalProperties": false
+                        },
+                        "tinyml": {
+                            "type": "object",
+                            "properties": {
+                                "viable": { "type": ["boolean", "null"] },
+                                "frameworks": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                },
+                                "notes": { "$ref": "common.json#/$defs/nullableString" }
+                            },
+                            "required": ["viable", "frameworks", "notes"],
+                            "additionalProperties": false
+                        },
                         "notes": { "$ref": "common.json#/$defs/nullableString" }
                     },
-                    "required": ["viable"],
+                    "required": ["viable", "accelerator", "usable_memory_gb", "llm", "tinyml"],
                     "additionalProperties": false
                 },
                 "toolchains": {
@@ -151,7 +216,7 @@
                 },
                 "verified": { "$ref": "common.json#/$defs/verification" }
             },
-            "required": ["provisioning_model", "component_attachment", "supported", "blocked_reason", "runtime", "gpio", "probe", "local_inference", "verified"],
+            "required": ["provisioning_model", "supported_provisioning_models", "component_attachment", "flash", "transport", "runtime", "gpio", "probe", "local_inference", "toolchains", "verified"],
             "additionalProperties": false
         }
     },

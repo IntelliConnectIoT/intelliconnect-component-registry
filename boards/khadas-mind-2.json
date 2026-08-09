@@ -6,14 +6,14 @@
     "source": "authored",
     "platform": {
         "name": "Khadas Mind 2",
-        "description": "Modular x86 mini PC with an Intel AI Boost NPU and a proprietary expansion interface for docks.",
+        "description": "Modular x86 mini PC built on Intel Lunar Lake, with an AI Boost NPU, Arc integrated graphics and a proprietary expansion interface for docks.",
         "board_type": "AI / Edge Computing",
         "manufacturer": "Khadas",
         "model_number": "Mind 2",
         "datasheet_url": null,
-        "cpu": "Intel Core Ultra (Meteor Lake)",
-        "ram": null,
-        "storage": null,
+        "cpu": "Intel Core Ultra 7 258V (Lunar Lake) @ 2.2GHz",
+        "ram": "32GB LPDDR5X on-package",
+        "storage": "1TB NVMe SSD",
         "operating_voltage": null,
         "gpio_pins": 0,
         "pwm_channels": 0,
@@ -39,9 +39,28 @@
     },
     "harness": {
         "provisioning_model": "linux-agent",
+        "supported_provisioning_models": [
+            "linux-agent"
+        ],
         "component_attachment": "usb-serial",
-        "supported": true,
-        "blocked_reason": null,
+        "flash": {
+            "method": "emmc",
+            "tool": null,
+            "port_hint": null,
+            "baud": null,
+            "notes": "An ordinary x86 machine. The operating system is installed from USB media and the agent is installed over the network afterwards."
+        },
+        "transport": {
+            "network": [
+                "wifi",
+                "ethernet",
+                "bluetooth"
+            ],
+            "mqtt_client": "paho-mqtt",
+            "tls": true,
+            "ota": true,
+            "notes": "Ethernet is provided through the dock rather than on the unit itself."
+        },
         "runtime": {
             "os_family": "debian",
             "python3": true,
@@ -68,12 +87,49 @@
         },
         "local_inference": {
             "viable": true,
-            "notes": "Intel AI Boost NPU and integrated Arc GPU. x86_64."
+            "accelerator": "npu",
+            "usable_memory_gb": 32,
+            "llm": {
+                "viable": true,
+                "max_params_b": 32,
+                "max_model_size_gb": 22,
+                "quantisation": [
+                    "q4_k_m",
+                    "q5_k_m",
+                    "q8_0",
+                    "int4",
+                    "int8"
+                ],
+                "runtimes": [
+                    "llama.cpp",
+                    "ollama",
+                    "OpenVINO",
+                    "LM Studio"
+                ],
+                "notes": "32GB of LPDDR5X is the largest memory pool in this registry, so a 30B class model at 4-bit fits with room to spare. Memory is on-package on Lunar Lake and cannot be upgraded, so the shipped configuration is the permanent ceiling. OpenVINO reaches the Arc 140V iGPU and the AI Boost NPU; llama.cpp defaults to CPU unless built against SYCL."
+            },
+            "tinyml": {
+                "viable": true,
+                "frameworks": [
+                    "OpenVINO",
+                    "ONNX Runtime",
+                    "TensorFlow"
+                ],
+                "notes": "Lunar Lake NPU 4 is designed for sustained low-power inference rather than peak throughput. Use it for always-on workloads and the iGPU for bursts."
+            },
+            "notes": "Specifications recorded from a physical unit as shipped: Core Ultra 7 258V, 32GB, 1TB. Other configurations exist, so treat memory and storage as configuration-specific rather than model-specific."
         },
+        "toolchains": [
+            "Docker",
+            "OpenVINO",
+            "Ollama"
+        ],
         "verified": {
             "by": null,
             "date": null,
-            "os": null
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
         }
     }
 }

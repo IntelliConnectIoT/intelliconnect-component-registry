@@ -1,0 +1,165 @@
+{
+    "key": "esp8684-devkitm-1",
+    "kind": "board",
+    "revision": 1,
+    "status": "draft",
+    "source": "authored",
+    "platform": {
+        "name": "ESP8684-DevKitM-1",
+        "description": "ESP32-C2. The smallest and cheapest Wi-Fi plus BLE part Espressif makes, with flash in package.",
+        "board_type": "Microcontroller",
+        "manufacturer": "Espressif",
+        "model_number": "ESP8684-DevKitM-1",
+        "datasheet_url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32c2/hw-reference/esp32c2/user-guide-esp8684-devkitm-1.html",
+        "cpu": "RISC-V single-core 32-bit @ 120MHz",
+        "ram": "272KB SRAM",
+        "storage": "4MB Flash in package",
+        "operating_voltage": "3.3V",
+        "gpio_pins": 14,
+        "pwm_channels": 6,
+        "adc_channels": 5,
+        "dac_channels": 0,
+        "dimensions_mm": null,
+        "weight_g": null,
+        "has_npu": false,
+        "has_gpu": false,
+        "has_tpu": false,
+        "operating_systems": [
+            {
+                "name": "ESP-IDF"
+            },
+            {
+                "name": "Arduino Core"
+            }
+        ],
+        "communication_chips": [
+            {
+                "chip_model": "ESP32-C2",
+                "protocol": "Wi-Fi",
+                "standard": "802.11b/g/n"
+            },
+            {
+                "chip_model": "ESP32-C2",
+                "protocol": "Bluetooth",
+                "standard": "5.0 LE"
+            }
+        ],
+        "serial_protocols": [
+            {
+                "protocol": "I2C",
+                "count": 1
+            },
+            {
+                "protocol": "SPI",
+                "count": 2
+            },
+            {
+                "protocol": "UART",
+                "count": 2
+            }
+        ],
+        "interfaces": [
+            {
+                "type": "Micro USB",
+                "count": 1
+            },
+            {
+                "type": "2.54mm header",
+                "count": 2
+            }
+        ],
+        "power": [
+            {
+                "source": "USB",
+                "voltage_min": 5,
+                "voltage_max": 5
+            },
+            {
+                "source": "5V pin",
+                "voltage_min": 5,
+                "voltage_max": 5
+            },
+            {
+                "source": "3V3 pin",
+                "voltage_min": 3.3,
+                "voltage_max": 3.3
+            }
+        ]
+    },
+    "harness": {
+        "provisioning_model": "arduino-sketch",
+        "supported_provisioning_models": [
+            "arduino-sketch",
+            "vendor-firmware"
+        ],
+        "component_attachment": "gpio-header",
+        "flash": {
+            "method": "usb-serial",
+            "tool": "esptool.py",
+            "port_hint": "/dev/ttyUSB0",
+            "baud": 460800,
+            "notes": "Flashes through an on-board USB to UART bridge. esptool drives the reset and boot lines automatically, so the boot button is not normally needed."
+        },
+        "transport": {
+            "network": [
+                "wifi",
+                "bluetooth"
+            ],
+            "mqtt_client": "umqtt.simple",
+            "tls": true,
+            "ota": true,
+            "notes": "Connects to the broker directly over Wi-Fi. TLS works but the handshake is the largest memory spike in a typical device program, so size the heap around it rather than around steady state."
+        },
+        "runtime": {
+            "os_family": null,
+            "python3": false,
+            "package_manager": null,
+            "service_manager": null
+        },
+        "gpio": {
+            "library": null,
+            "pin_scheme": "gpio",
+            "notes": "Almost every pin is routable to almost any peripheral through the GPIO matrix, so a driver binds to a pin number chosen at deploy time rather than to a fixed function. The strapping pins and the pins bonded to on-package flash are the exceptions and must not be used."
+        },
+        "probe": {
+            "model_file": null,
+            "overlay_file": null,
+            "commands": [
+                "arduino-cli board list",
+                "arduino-cli board details --fqbn <fqbn>"
+            ]
+        },
+        "local_inference": {
+            "viable": false,
+            "accelerator": null,
+            "usable_memory_gb": null,
+            "llm": {
+                "viable": false,
+                "max_params_b": null,
+                "max_model_size_gb": null,
+                "quantisation": [],
+                "runtimes": [],
+                "notes": "Kilobytes of RAM. A general language model does not run here and never will. Send the reading to something that can."
+            },
+            "tinyml": {
+                "viable": false,
+                "frameworks": [],
+                "notes": "272KB of SRAM with the Wi-Fi stack already resident. There is no room for a model."
+            },
+            "notes": "There is no official MicroPython port for the C2, so the MicroPython pipeline does not apply to this board. Build a sketch or use ESP-IDF."
+        },
+        "toolchains": [
+            "ESP-IDF",
+            "Arduino IDE",
+            "Arduino CLI",
+            "PlatformIO"
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
+        }
+    }
+}

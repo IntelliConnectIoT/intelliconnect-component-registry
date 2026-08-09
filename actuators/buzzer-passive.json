@@ -105,7 +105,9 @@
             "by": null,
             "date": null,
             "board": null,
-            "os": null
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
         }
     }
 }

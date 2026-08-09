@@ -1,6 +1,6 @@
 {
-    "schema_version": 1,
-    "registry_version": "0.1.0",
+    "schema_version": 2,
+    "registry_version": "0.2.0",
     "boards": [
         {
             "key": "raspberry-pi-5-8gb",
@@ -34,35 +34,133 @@
             "key": "arduino-portenta-h7",
             "name": "Arduino® Portenta H7",
             "board_type": "Single Board Computer / Microcontroller Hybrid",
-            "provisioning_model": "firmware",
-            "status": "unsupported"
+            "provisioning_model": "micropython",
+            "status": "draft"
         },
         {
             "key": "arduino-nicla-vision",
             "name": "Arduino® Nicla Vision",
             "board_type": "AI / Edge Computing",
-            "provisioning_model": "firmware",
-            "status": "unsupported"
+            "provisioning_model": "micropython",
+            "status": "draft"
         },
         {
             "key": "arduino-nicla-voice",
             "name": "Arduino® Nicla Voice",
             "board_type": "AI / Edge Computing",
-            "provisioning_model": "firmware",
-            "status": "unsupported"
+            "provisioning_model": "arduino-sketch",
+            "status": "draft"
         },
         {
             "key": "arduino-nano-matter",
             "name": "Arduino® Nano Matter",
             "board_type": "Microcontroller",
-            "provisioning_model": "firmware",
-            "status": "unsupported"
+            "provisioning_model": "arduino-sketch",
+            "status": "draft"
         },
         {
             "key": "khadas-mind-2",
             "name": "Khadas Mind 2",
             "board_type": "AI / Edge Computing",
             "provisioning_model": "linux-agent",
+            "status": "draft"
+        },
+        {
+            "key": "esp32-devkitc-v4",
+            "name": "ESP32-DevKitC-V4",
+            "board_type": "Microcontroller",
+            "provisioning_model": "micropython",
+            "status": "draft"
+        },
+        {
+            "key": "esp32-s2-saola-1",
+            "name": "ESP32-S2-Saola-1",
+            "board_type": "Microcontroller",
+            "provisioning_model": "micropython",
+            "status": "draft"
+        },
+        {
+            "key": "esp32-s3-devkitc-1",
+            "name": "ESP32-S3-DevKitC-1",
+            "board_type": "Microcontroller",
+            "provisioning_model": "micropython",
+            "status": "draft"
+        },
+        {
+            "key": "esp32-c3-devkitm-1",
+            "name": "ESP32-C3-DevKitM-1",
+            "board_type": "Microcontroller",
+            "provisioning_model": "micropython",
+            "status": "draft"
+        },
+        {
+            "key": "esp32-c6-devkitc-1",
+            "name": "ESP32-C6-DevKitC-1",
+            "board_type": "Microcontroller",
+            "provisioning_model": "micropython",
+            "status": "draft"
+        },
+        {
+            "key": "esp8684-devkitm-1",
+            "name": "ESP8684-DevKitM-1",
+            "board_type": "Microcontroller",
+            "provisioning_model": "arduino-sketch",
+            "status": "draft"
+        },
+        {
+            "key": "esp32-h2-devkitm-1",
+            "name": "ESP32-H2-DevKitM-1",
+            "board_type": "Microcontroller",
+            "provisioning_model": "arduino-sketch",
+            "status": "draft"
+        },
+        {
+            "key": "esp32-p4-function-ev-board",
+            "name": "ESP32-P4-Function-EV-Board",
+            "board_type": "Microcontroller",
+            "provisioning_model": "arduino-sketch",
+            "status": "draft"
+        },
+        {
+            "key": "esp32-cam",
+            "name": "ESP32-CAM",
+            "board_type": "Microcontroller",
+            "provisioning_model": "micropython",
+            "status": "draft"
+        },
+        {
+            "key": "nodemcu-32s",
+            "name": "NodeMCU-32S",
+            "board_type": "Microcontroller",
+            "provisioning_model": "micropython",
+            "status": "draft"
+        },
+        {
+            "key": "lilygo-t-display-s3",
+            "name": "LilyGO T-Display-S3",
+            "board_type": "Microcontroller",
+            "provisioning_model": "arduino-sketch",
+            "status": "draft"
+        },
+        {
+            "key": "seeed-xiao-esp32c3",
+            "name": "Seeed XIAO ESP32C3",
+            "board_type": "Microcontroller",
+            "provisioning_model": "micropython",
+            "status": "draft"
+        },
+        {
+            "key": "seeed-xiao-esp32s3",
+            "name": "Seeed XIAO ESP32S3",
+            "board_type": "Microcontroller",
+            "provisioning_model": "micropython",
+            "status": "draft"
+        },
+        {
+            "key": "m5stack-core2",
+            "name": "M5Stack Core2",
+            "board_type": "Microcontroller",
+            "provisioning_model": "arduino-sketch",
             "status": "draft"
         }
     ],

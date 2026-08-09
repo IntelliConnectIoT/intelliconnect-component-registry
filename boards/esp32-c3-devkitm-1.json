@@ -1,32 +1,35 @@
 {
-    "key": "arduino-nicla-vision",
+    "key": "esp32-c3-devkitm-1",
     "kind": "board",
     "revision": 1,
     "status": "draft",
-    "source": "platform-seed",
+    "source": "authored",
     "platform": {
-        "name": "Arduino® Nicla Vision",
-        "description": "Edge AI vision board with 2MP camera.",
-        "board_type": "AI / Edge Computing",
-        "manufacturer": "Arduino",
-        "model_number": "ABX00051",
-        "datasheet_url": null,
-        "cpu": "STM32H747 Dual Core",
-        "ram": "1MB SRAM",
-        "storage": "2MB Flash",
+        "name": "ESP32-C3-DevKitM-1",
+        "description": "Low cost RISC-V single core with Wi-Fi and BLE 5. The volume replacement for the ESP8266.",
+        "board_type": "Microcontroller",
+        "manufacturer": "Espressif",
+        "model_number": "ESP32-C3-DevKitM-1",
+        "datasheet_url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/hw-reference/esp32c3/user-guide-devkitm-1.html",
+        "cpu": "RISC-V single-core 32-bit @ 160MHz",
+        "ram": "400KB SRAM",
+        "storage": "4MB Flash",
         "operating_voltage": "3.3V",
-        "gpio_pins": 10,
-        "pwm_channels": 2,
-        "adc_channels": 2,
+        "gpio_pins": 22,
+        "pwm_channels": 6,
+        "adc_channels": 6,
         "dac_channels": 0,
-        "dimensions_mm": "22.86 x 22.86",
-        "weight_g": 2,
+        "dimensions_mm": null,
+        "weight_g": null,
         "has_npu": false,
-        "has_gpu": true,
+        "has_gpu": false,
         "has_tpu": false,
         "operating_systems": [
             {
-                "name": "Arduino IDE"
+                "name": "ESP-IDF"
+            },
+            {
+                "name": "Arduino Core"
             },
             {
                 "name": "MicroPython"
@@ -34,14 +37,14 @@
         ],
         "communication_chips": [
             {
-                "chip_model": "Murata 1DX",
+                "chip_model": "ESP32-C3",
                 "protocol": "Wi-Fi",
                 "standard": "802.11b/g/n"
             },
             {
-                "chip_model": "Murata 1DX",
+                "chip_model": "ESP32-C3",
                 "protocol": "Bluetooth",
-                "standard": "4.2"
+                "standard": "5.0 LE"
             }
         ],
         "serial_protocols": [
@@ -51,24 +54,42 @@
             },
             {
                 "protocol": "SPI",
+                "count": 3
+            },
+            {
+                "protocol": "UART",
+                "count": 2
+            },
+            {
+                "protocol": "I2S",
                 "count": 1
             }
         ],
         "interfaces": [
             {
-                "type": "Camera GC2145",
+                "type": "Micro USB",
                 "count": 1
             },
             {
-                "type": "Micro USB",
-                "count": 1
+                "type": "2.54mm header",
+                "count": 2
             }
         ],
         "power": [
             {
-                "source": "Micro USB",
+                "source": "USB",
                 "voltage_min": 5,
                 "voltage_max": 5
+            },
+            {
+                "source": "5V pin",
+                "voltage_min": 5,
+                "voltage_max": 5
+            },
+            {
+                "source": "3V3 pin",
+                "voltage_min": 3.3,
+                "voltage_max": 3.3
             }
         ]
     },
@@ -76,15 +97,16 @@
         "provisioning_model": "micropython",
         "supported_provisioning_models": [
             "micropython",
-            "arduino-sketch"
+            "arduino-sketch",
+            "vendor-firmware"
         ],
         "component_attachment": "gpio-header",
         "flash": {
-            "method": "dfu",
-            "tool": "dfu-util",
-            "port_hint": "/dev/ttyACM0",
-            "baud": null,
-            "notes": "Double-tap reset for the bootloader. OpenMV IDE flashes its own MicroPython build and will overwrite an Arduino sketch."
+            "method": "usb-serial",
+            "tool": "esptool.py",
+            "port_hint": "/dev/ttyUSB0",
+            "baud": 460800,
+            "notes": "The DevKitM-1 micro USB port goes through a bridge chip. The C3 also has native USB Serial/JTAG on GPIO18 and GPIO19, but this board does not bring it out to a connector."
         },
         "transport": {
             "network": [
@@ -94,7 +116,7 @@
             "mqtt_client": "umqtt.simple",
             "tls": true,
             "ota": true,
-            "notes": "Murata 1DX module. 802.11b/g/n and Bluetooth 4.2."
+            "notes": "Connects to the broker directly over Wi-Fi. TLS works but the handshake is the largest memory spike in a typical device program, so size the heap around it rather than around steady state."
         },
         "runtime": {
             "os_family": null,
@@ -104,8 +126,8 @@
         },
         "gpio": {
             "library": "machine",
-            "pin_scheme": "arduino",
-            "notes": "Ten castellated pads, not a pin header. Soldering or a carrier is required to attach anything."
+            "pin_scheme": "gpio",
+            "notes": "Almost every pin is routable to almost any peripheral through the GPIO matrix, so a driver binds to a pin number chosen at deploy time rather than to a fixed function. The strapping pins and the pins bonded to on-package flash are the exceptions and must not be used."
         },
         "probe": {
             "model_file": null,
@@ -120,7 +142,7 @@
         },
         "local_inference": {
             "viable": true,
-            "accelerator": "dsp",
+            "accelerator": null,
             "usable_memory_gb": null,
             "llm": {
                 "viable": false,
@@ -133,20 +155,18 @@
             "tinyml": {
                 "viable": true,
                 "frameworks": [
-                    "OpenMV",
-                    "TensorFlow Lite Micro",
-                    "Edge Impulse"
+                    "TensorFlow Lite Micro"
                 ],
-                "notes": "GC2145 2MP camera with an on-board time of flight sensor and microphone. Designed for vision inference at the edge."
+                "notes": "ESP-DL does not target the C3. TensorFlow Lite Micro runs but 400KB of SRAM caps the model at something very small."
             },
-            "notes": "The camera is the reason to choose this board. Treat it as a vision sensor that reports results, not as a general host."
+            "notes": "Chosen on price and power, not on compute."
         },
         "toolchains": [
             "MicroPython",
-            "OpenMV IDE",
+            "ESP-IDF",
             "Arduino IDE",
             "Arduino CLI",
-            "Edge Impulse"
+            "PlatformIO"
         ],
         "verified": {
             "by": null,

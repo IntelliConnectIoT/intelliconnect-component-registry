@@ -2,7 +2,7 @@
 
 ![IntelliConnect Component Registry](assets/img/banner.svg)
 
-![Registry version](https://img.shields.io/badge/registry-0.1.0-4D8AFF) ![Schema version](https://img.shields.io/badge/schema-v1-4D8AFF) ![Boards](https://img.shields.io/badge/boards-9-4D8AFF) ![Sensors](https://img.shields.io/badge/sensors-16-4D8AFF) ![Actuators](https://img.shields.io/badge/actuators-5-4D8AFF) ![Verified](https://img.shields.io/badge/verified-0-lightgrey) ![Licence](https://img.shields.io/badge/licence-Apache--2.0-4D8AFF)
+![Registry version](https://img.shields.io/badge/registry-0.2.0-4D8AFF) ![Schema version](https://img.shields.io/badge/schema-v2-4D8AFF) ![Boards](https://img.shields.io/badge/boards-23-4D8AFF) ![Sensors](https://img.shields.io/badge/sensors-16-4D8AFF) ![Actuators](https://img.shields.io/badge/actuators-5-4D8AFF) ![Verified](https://img.shields.io/badge/verified-0-lightgrey) ![Licence](https://img.shields.io/badge/licence-Apache--2.0-4D8AFF)
 
 An open registry of IoT boards, sensors and actuators for developers and agents.
 
@@ -40,8 +40,12 @@ scheme, probe commands.
   declared, and every project measuring temperature calls it `temperature` in °C.
 - **Control is bounded.** A servo takes `SET_ANGLE` 0–180 and nothing else. Commands come
   from the registry, so nothing outside the set can be issued.
-- **Know before you buy.** A Nicla Voice cannot host an agent. A mini PC has no GPIO
-  header. An HC-SR04 echo pin destroys a 3.3V input without a divider.
+- **Know before you buy.** An ESP32-H2 has no Wi-Fi and cannot reach a broker without a
+  border router. A mini PC has no GPIO header. An ESP32-CAM has no USB socket and needs
+  GPIO0 grounded to flash. An HC-SR04 echo pin destroys a 3.3V input without a divider.
+- **Know what will run on it.** Every board declares how large a language model it can
+  host, on what accelerator, with which runtimes — and says plainly when the answer is
+  none.
 
 ## How to use it
 
@@ -59,11 +63,11 @@ a component.
 
 | | Count | Verified |
 | --- | --- | --- |
-| Boards | 9 | 0 |
+| Boards | 23 | 0 |
 | Sensors | 16 | 0 |
 | Actuators | 5 | 0 |
 
-Nothing is verified yet. Every entry carries real specifications, and 28 of the 30 carry a
+Nothing is verified yet. Every entry carries real specifications, and 42 of the 44 carry a
 full driver or harness block, but none have been signed off against physical hardware by a
 named person. Until an entry reaches `verified` a conforming tool will refuse to
 provision it. Signing entries off is the most useful thing you can contribute, and
@@ -102,6 +106,8 @@ actuators/<key>.json
 
 [SPEC.md](SPEC.md) defines the entry format and what a consuming tool must do. Validate a
 contribution with `python tools/validate.py` before opening a pull request.
+[CHANGELOG.md](CHANGELOG.md) records every release and how to migrate between schema
+versions.
 
 `<key>` is the lowercased, hyphenated model number: `DHT22` becomes `dht22`,
 `HC-SR04` becomes `hc-sr04`. Where a variant materially changes what the board
@@ -115,11 +121,9 @@ separate, because available memory decides whether local inference is possible.
 | `unverified` | Catalogue metadata only, no driver or harness block | Refuse |
 | `draft` | Block authored but not yet run on real hardware | Refuse |
 | `verified` | Block authored and confirmed against the physical hardware | Provision |
-| `unsupported` | Board cannot host a provisioning agent at all | Refuse, permanently |
 
 An entry only reaches `verified` when a named person has run it against the real hardware
-and confirmed the readings are plausible. `unsupported` applies to boards only and is not
-a defect. It records a permanent architectural fact rather than missing work.
+and confirmed the readings are plausible. Status records verification progress only.
 
 `source` records where an entry came from: `platform-seed` for components imported from
 the original IntelliConnect catalogue, `authored` for entries written from datasheets.
@@ -263,48 +267,50 @@ actually bites people.
 ## Board entry
 
 Boards carry a `harness` block in place of a `driver` block. It answers one question
-before any other: can this board host a provisioning agent at all?
+before any other: how is a device program got onto this board, and how does it then reach
+the platform?
 
 ```json
 "harness": {
-    "provisioning_model": "linux-agent",
+    "provisioning_model": "micropython",
+    "supported_provisioning_models": ["micropython", "arduino-sketch", "vendor-firmware"],
     "component_attachment": "gpio-header",
-    "supported": true,
-    "blocked_reason": null,
-    "runtime": {
-        "os_family": "debian",
-        "python3": true,
-        "package_manager": "apt",
-        "service_manager": "systemd"
-    },
-    "gpio": {
-        "library": "libgpiod",
-        "pin_scheme": "bcm",
+    "flash": {
+        "method": "usb-native",
+        "tool": "esptool.py",
+        "port_hint": "/dev/ttyACM0",
+        "baud": 921600,
         "notes": "..."
     },
-    "probe": {
-        "model_file": "/proc/device-tree/model",
-        "overlay_file": "/boot/firmware/config.txt",
-        "commands": ["..."]
-    },
-    "local_inference": {
-        "viable": true,
+    "transport": {
+        "network": ["wifi", "bluetooth"],
+        "mqtt_client": "umqtt.simple",
+        "tls": true,
+        "ota": true,
         "notes": "..."
     },
+    "runtime": { },
+    "gpio": { },
+    "probe": { },
+    "local_inference": { },
+    "toolchains": ["MicroPython", "ESP-IDF", "Arduino IDE", "PlatformIO"],
     "verified": { }
 }
 ```
 
-`provisioning_model` has two values, and they are not points on a spectrum:
+`provisioning_model` is the default path. `supported_provisioning_models` lists every path
+that works and always includes the default.
 
-- **`linux-agent`**: the board runs a general purpose OS. An agent can be installed onto
-  it, probe the hardware, generate the device program and run it as a service.
-- **`firmware`**: the board is a microcontroller. There is no OS to install onto and not
-  enough memory to host an agent. The device program must be cross-compiled and flashed
-  from a host machine. That is a different pipeline, and a Linux agent must refuse the
-  board outright rather than degrade.
+- **`linux-agent`** — general purpose OS. The agent installs onto it, probes the hardware,
+  generates the device program and runs it as a service.
+- **`micropython`** — MicroPython flashed once, device program pushed as source over USB
+  or OTA, `umqtt.simple` to the broker. Changing the program does not mean reflashing.
+- **`arduino-sketch`** — compiled with `arduino-cli` or PlatformIO, uploaded over USB,
+  `PubSubClient` or the ESP-IDF MQTT client to the broker.
+- **`vendor-firmware`** — the manufacturer's SDK: ESP-IDF, Silicon Labs Gecko SDK, the
+  Syntiant NDP120 toolchain.
 
-`component_attachment` also has two values, independent of the above:
+`component_attachment` has two values, independent of the above:
 
 - **`gpio-header`**: components are wired to pins, so a driver's `connection.pins`
   applies.
@@ -319,6 +325,46 @@ not a gap to be worked around.
 `gpio.library` is board-specific even between boards that look interchangeable. A 40-pin
 header does not imply a shared driver stack. A Raspberry Pi 5 and a Jetson with identical
 pinouts need different libraries.
+
+`transport` is the field people wish they had read first. A board with no Wi-Fi cannot
+reach an MQTT broker, however capable it is otherwise, and no amount of configuration
+changes that. An ESP32-H2 and an Arduino Nano Matter both need a Thread or Zigbee border
+router to exist before they are any use at all.
+
+## What will actually run on it
+
+`local_inference` answers the question every buyer has and no product page answers
+honestly: can this board run a model, and how big?
+
+```json
+"local_inference": {
+    "viable": true,
+    "accelerator": "cuda",
+    "usable_memory_gb": 8,
+    "llm": {
+        "viable": true,
+        "max_params_b": 8,
+        "max_model_size_gb": 6,
+        "quantisation": ["q4_k_m", "awq", "int4"],
+        "runtimes": ["llama.cpp", "ollama", "TensorRT-LLM", "vLLM"],
+        "notes": "..."
+    },
+    "tinyml": {
+        "viable": true,
+        "frameworks": ["TensorRT", "ONNX Runtime"],
+        "notes": "..."
+    },
+    "notes": "..."
+}
+```
+
+`llm` and `tinyml` are separate because the answers diverge sharply. An ESP32-S3 runs a
+quantised image classifier perfectly well and will never run a language model. A Jetson
+does both. A Nicla Voice runs a wake-word model on a dedicated neural processor at
+microamp power, which nothing else here can do, and has no language model story at all.
+
+Where a language model does not fit, the entry says so in plain terms rather than leaving
+the field null, because "no" is a useful answer and a null is not.
 
 ## Contributing
 
