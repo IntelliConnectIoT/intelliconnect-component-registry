@@ -2,6 +2,8 @@
 
 ![IntelliConnect Component Registry](assets/img/banner.svg)
 
+![Registry version](https://img.shields.io/badge/registry-0.1.0-4D8AFF) ![Schema version](https://img.shields.io/badge/schema-v1-4D8AFF) ![Boards](https://img.shields.io/badge/boards-9-4D8AFF) ![Sensors](https://img.shields.io/badge/sensors-16-4D8AFF) ![Actuators](https://img.shields.io/badge/actuators-5-4D8AFF) ![Verified](https://img.shields.io/badge/verified-0-lightgrey) ![Licence](https://img.shields.io/badge/licence-Apache--2.0-4D8AFF)
+
 An open registry of IoT boards, sensors and actuators for developers and agents.
 
 ## What it is for
@@ -90,12 +92,16 @@ You do not need to write any registry code to help, only own the component.
 
 ```
 index.json                      summary of every entry
+schema/*.json                   JSON Schema for each entry kind
 vocabulary/device-classes.json  canonical reading slugs, units and device classes
 vocabulary/lookups.json         component type and protocol definitions
 boards/<key>.json
 sensors/<key>.json
 actuators/<key>.json
 ```
+
+[SPEC.md](SPEC.md) defines the entry format and what a consuming tool must do. Validate a
+contribution with `python tools/validate.py` before opening a pull request.
 
 `<key>` is the lowercased, hyphenated model number: `DHT22` becomes `dht22`,
 `HC-SR04` becomes `hc-sr04`. Where a variant materially changes what the board

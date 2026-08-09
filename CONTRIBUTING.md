@@ -55,6 +55,18 @@ one under a different name.
 **Never change a published `slug`.** Recorded measurements are keyed on it. Renaming one
 breaks history for every existing deployment.
 
+## Validate before you submit
+
+```sh
+pip install jsonschema
+python tools/validate.py
+```
+
+It runs the JSON Schemas in `schema/` and the cross-file checks: filename against `key`,
+entry against `index.json`, reading slugs and units against the vocabulary, and status
+against the presence and contents of the driver block. [SPEC.md](SPEC.md) explains each
+rule. A contribution that does not pass is not ready for review.
+
 ## Verification
 
 [VERIFYING.md](VERIFYING.md) is the step by step guide, covering sensors, actuators and

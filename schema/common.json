@@ -1,0 +1,128 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://registry.intelliconnect.dev/schema/common.json",
+    "title": "Shared component registry definitions",
+    "$defs": {
+        "key": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "description": "Lowercased hyphenated model number. Immutable once published."
+        },
+        "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "status": {
+            "enum": ["unverified", "draft", "verified", "unsupported"]
+        },
+        "dataType": {
+            "enum": ["float", "integer", "boolean", "string", "enum"]
+        },
+        "nullableString": {
+            "type": ["string", "null"]
+        },
+        "nullableNumber": {
+            "type": ["number", "null"]
+        },
+        "nullableInteger": {
+            "type": ["integer", "null"]
+        },
+        "url": {
+            "type": ["string", "null"],
+            "format": "uri"
+        },
+        "verification": {
+            "type": "object",
+            "description": "Who confirmed this against physical hardware. All null until verified.",
+            "properties": {
+                "by": { "$ref": "#/$defs/nullableString" },
+                "date": { "type": ["string", "null"], "format": "date" },
+                "board": { "$ref": "#/$defs/nullableString" },
+                "os": { "$ref": "#/$defs/nullableString" }
+            },
+            "required": ["by", "date", "os"],
+            "additionalProperties": false
+        },
+        "pin": {
+            "type": "object",
+            "properties": {
+                "role": { "type": "string" },
+                "required": { "type": "boolean" },
+                "notes": { "$ref": "#/$defs/nullableString" }
+            },
+            "required": ["role"],
+            "additionalProperties": false
+        },
+        "driver": {
+            "type": "object",
+            "properties": {
+                "targets": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "minItems": 1
+                },
+                "interface": { "type": "string" },
+                "connection": {
+                    "type": "object",
+                    "properties": {
+                        "pins": {
+                            "type": "array",
+                            "items": { "$ref": "#/$defs/pin" }
+                        },
+                        "supply_voltage": { "$ref": "#/$defs/nullableString" },
+                        "level_shift_required": { "$ref": "#/$defs/nullableString" },
+                        "i2c_addresses": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "pullup_ohms": { "$ref": "#/$defs/nullableInteger" }
+                    },
+                    "required": ["pins", "supply_voltage"],
+                    "additionalProperties": false
+                },
+                "runtime": {
+                    "type": "object",
+                    "properties": {
+                        "python_module": { "type": "string" },
+                        "pip_packages": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "apt_packages": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "init": {
+                            "type": "object",
+                            "properties": {
+                                "class": { "type": "string" },
+                                "args": { "type": "object" }
+                            },
+                            "required": ["class", "args"],
+                            "additionalProperties": false
+                        }
+                    },
+                    "required": ["python_module", "pip_packages", "apt_packages", "init"],
+                    "additionalProperties": false
+                },
+                "constraints": {
+                    "type": "object",
+                    "properties": {
+                        "min_read_interval_seconds": { "$ref": "#/$defs/nullableNumber" },
+                        "read_timeout_seconds": { "$ref": "#/$defs/nullableNumber" },
+                        "warmup_seconds": { "$ref": "#/$defs/nullableNumber" }
+                    },
+                    "additionalProperties": false
+                },
+                "failure_modes": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Prose. How the part misbehaves in the field."
+                },
+                "verified": { "$ref": "#/$defs/verification" }
+            },
+            "required": ["targets", "interface", "connection", "runtime", "constraints", "failure_modes", "verified"],
+            "additionalProperties": false
+        }
+    }
+}

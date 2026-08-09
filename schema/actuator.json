@@ -1,0 +1,101 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://registry.intelliconnect.dev/schema/actuator.json",
+    "title": "Actuator entry",
+    "type": "object",
+    "properties": {
+        "key": { "$ref": "common.json#/$defs/key" },
+        "kind": { "const": "actuator" },
+        "revision": { "type": "integer", "minimum": 1 },
+        "status": { "$ref": "common.json#/$defs/status" },
+        "source": { "type": "string" },
+        "blocked_reason": { "$ref": "common.json#/$defs/nullableString" },
+        "platform": {
+            "type": "object",
+            "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "description": { "type": "string" },
+                "actuator_type": { "$ref": "common.json#/$defs/slug" },
+                "protocol": { "$ref": "common.json#/$defs/slug" },
+                "manufacturer": { "$ref": "common.json#/$defs/nullableString" },
+                "model_number": { "type": "string", "minLength": 1 },
+                "datasheet_url": { "$ref": "common.json#/$defs/url" },
+                "command_topic_suffix": { "type": "string", "minLength": 1 },
+                "response_topic_suffix": { "type": "string", "minLength": 1 },
+                "states": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "type": "string",
+                                "pattern": "^[A-Z0-9]+(_[A-Z0-9]+)*$",
+                                "description": "The exact command a consumer may issue. Nothing outside this set is valid."
+                            },
+                            "label": { "type": "string", "minLength": 1 },
+                            "description": { "type": "string" },
+                            "payload": { "type": "string" },
+                            "sort_order": { "type": "integer", "minimum": 1 },
+                            "parameter": {
+                                "oneOf": [
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": { "type": "string", "minLength": 1 },
+                                            "data_type": { "$ref": "common.json#/$defs/dataType" },
+                                            "unit_symbol": { "$ref": "common.json#/$defs/nullableString" },
+                                            "range_min": { "$ref": "common.json#/$defs/nullableNumber" },
+                                            "range_max": { "$ref": "common.json#/$defs/nullableNumber" },
+                                            "format": { "type": "string" },
+                                            "pattern": { "type": "string", "format": "regex" },
+                                            "values": {
+                                                "type": "array",
+                                                "items": { "type": "string" },
+                                                "minItems": 1
+                                            },
+                                            "required": { "type": "boolean" }
+                                        },
+                                        "required": ["name", "data_type", "required"],
+                                        "additionalProperties": false,
+                                        "allOf": [
+                                            {
+                                                "if": { "properties": { "data_type": { "const": "enum" } }, "required": ["data_type"] },
+                                                "then": { "required": ["values"] }
+                                            }
+                                        ]
+                                    },
+                                    { "type": "null" }
+                                ]
+                            }
+                        },
+                        "required": ["command", "label", "description", "payload", "sort_order", "parameter"],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "required": ["name", "description", "actuator_type", "protocol", "manufacturer", "model_number", "datasheet_url", "command_topic_suffix", "response_topic_suffix", "states"],
+            "additionalProperties": false
+        },
+        "model": {
+            "type": "object",
+            "properties": {
+                "aliases": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "device_class": { "type": "string" }
+            },
+            "required": ["aliases"],
+            "additionalProperties": false
+        },
+        "driver": {
+            "oneOf": [
+                { "$ref": "common.json#/$defs/driver" },
+                { "type": "null" }
+            ]
+        }
+    },
+    "required": ["key", "kind", "revision", "status", "source", "platform", "model", "driver"],
+    "additionalProperties": false
+}
