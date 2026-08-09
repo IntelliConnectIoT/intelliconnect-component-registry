@@ -14,14 +14,34 @@ It is listed against any release that changes it.
 
 ## [Unreleased]
 
-## [0.2.0] — 2026-08-09
+## [0.3.0] — 2026-08-09
 
 Schema version 2.
 
-Microcontrollers are first class targets. Version 0.1.0 marked any board that could not
-host a Linux provisioning agent as `unsupported` and instructed consumers to refuse it
-permanently. That was wrong: it described a limit of one provisioning pipeline as a
-property of the hardware, and it excluded the most widely deployed IoT parts in existence.
+### Added
+
+- `led-5mm` — single colour through-hole LED on one GPIO pin. `ON`, `OFF`,
+  `SET_BRIGHTNESS` 0–100%, `BLINK` 0.1–60s
+- `led-rgb-5mm` — three dies in one package on three PWM channels. `ON`, `OFF`,
+  `SET_COLOR` as hex RGB, `SET_BRIGHTNESS` 0–100%
+- Series resistor declared as a required pin on both, sized by forward voltage
+- Failure modes: missing resistor, resistor sized for the wrong colour, reversed polarity,
+  per-pin and total GPIO current limits
+- RGB failure modes: common cathode and common anode are visually identical and invert
+  every duty cycle; the common leg needs a resistor per channel, not one shared
+- Optional `vendor` block on every entry kind, recording a manufacturer or supplier
+  endorsement. Independent of `status`, grants nothing, and never makes an entry
+  provisionable
+- `vendor.scope` states what was endorsed: `specifications`, `driver` or `harness`
+- Validator rules: `verified: true` requires `organisation`, `domain`, `date`,
+  `evidence_url` and a non-empty `scope`; `evidence_url` must be https and resolve on the
+  declared domain or a subdomain of it, so an endorsement cannot be asserted on a vendor's
+  behalf; where `verified` is false every other field must be empty
+- Vendor verification documented in `SPEC.md`, `CONTRIBUTING.md` and `README.md`
+
+## [0.2.0] — 2026-08-09
+
+Schema version 2.
 
 ### Added
 
@@ -91,7 +111,7 @@ property of the hardware, and it excluded the most widely deployed IoT parts in 
 
 ## [0.1.0] — 2026-08-08
 
-Schema version 1. First public release.
+Schema version 1.
 
 ### Added
 
@@ -105,6 +125,7 @@ Schema version 1. First public release.
 - `SPEC.md`, `CONTRIBUTING.md` and `VERIFYING.md`
 - Apache 2.0 licence and NOTICE
 
-[Unreleased]: https://github.com/IntelliConnectIoT/intelliconnect-component-registry/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/IntelliConnectIoT/intelliconnect-component-registry/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/IntelliConnectIoT/intelliconnect-component-registry/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/IntelliConnectIoT/intelliconnect-component-registry/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/IntelliConnectIoT/intelliconnect-component-registry/releases/tag/v0.1.0
+[0.1.0]: https://github.com/IntelliConnectIoT/intelliconnect-component-registry/tree/v0.1.0

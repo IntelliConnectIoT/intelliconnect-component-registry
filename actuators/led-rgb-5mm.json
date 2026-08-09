@@ -1,0 +1,146 @@
+{
+    "key": "led-rgb-5mm",
+    "kind": "actuator",
+    "revision": 1,
+    "status": "draft",
+    "source": "authored",
+    "platform": {
+        "name": "5mm RGB LED",
+        "description": "Single RGB LED in one package with three dies sharing a common pin. Three PWM channels and three series resistors. Common cathode and common anode variants are physically identical and behave inversely.",
+        "actuator_type": "led",
+        "protocol": "pwm",
+        "manufacturer": null,
+        "model_number": "LED-RGB-5MM",
+        "datasheet_url": null,
+        "command_topic_suffix": "command/led",
+        "response_topic_suffix": "response/led",
+        "states": [
+            {
+                "command": "ON",
+                "label": "On",
+                "description": "Turn on at the last set colour, or white if none was set",
+                "payload": "ON",
+                "sort_order": 1,
+                "parameter": null
+            },
+            {
+                "command": "OFF",
+                "label": "Off",
+                "description": "Turn all three channels off",
+                "payload": "OFF",
+                "sort_order": 2,
+                "parameter": null
+            },
+            {
+                "command": "SET_COLOR",
+                "label": "Set Colour",
+                "description": "Set colour as a hex RGB value",
+                "payload": "SET_COLOR",
+                "sort_order": 3,
+                "parameter": {
+                    "name": "colour",
+                    "data_type": "string",
+                    "format": "hex-rgb",
+                    "pattern": "^#?[0-9A-Fa-f]{6}$",
+                    "required": true
+                }
+            },
+            {
+                "command": "SET_BRIGHTNESS",
+                "label": "Set Brightness",
+                "description": "Scale all three channels by a percentage",
+                "payload": "SET_BRIGHTNESS",
+                "sort_order": 4,
+                "parameter": {
+                    "name": "brightness",
+                    "data_type": "integer",
+                    "unit_symbol": "%",
+                    "range_min": 0,
+                    "range_max": 100,
+                    "required": true
+                }
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "rgb-led",
+            "led-rgb",
+            "tricolour-led"
+        ],
+        "device_class": "light"
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "pwm",
+        "connection": {
+            "pins": [
+                {
+                    "role": "red",
+                    "required": true,
+                    "notes": "Series resistor required between the pin and the anode. Size it for the forward voltage of the colour fitted, typically 220R at 3.3V for red and 100R for blue, green or white."
+                },
+                {
+                    "role": "green",
+                    "required": true,
+                    "notes": "Series resistor required between the pin and the anode. Size it for the forward voltage of the colour fitted, typically 220R at 3.3V for red and 100R for blue, green or white."
+                },
+                {
+                    "role": "blue",
+                    "required": true,
+                    "notes": "Series resistor required between the pin and the anode. Size it for the forward voltage of the colour fitted, typically 220R at 3.3V for red and 100R for blue, green or white."
+                },
+                {
+                    "role": "common",
+                    "required": true,
+                    "notes": "Ground on a common cathode part, supply on a common anode part."
+                }
+            ],
+            "supply_voltage": "3.3V or 5V through three series resistors",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.rgb_led",
+            "pip_packages": [
+                "gpiozero"
+            ],
+            "apt_packages": [
+                "python3-gpiozero"
+            ],
+            "init": {
+                "class": "gpiozero.RGBLED",
+                "args": {
+                    "red": "{red_pin}",
+                    "green": "{green_pin}",
+                    "blue": "{blue_pin}",
+                    "active_high": "{common_cathode}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": null,
+            "read_timeout_seconds": null,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "A series resistor is mandatory on every anode. Without one the LED is across the full supply and either the die or the GPIO pin fails, usually within seconds and often silently at first.",
+            "Sizing the resistor needs the forward voltage of that colour, which is not the same across colours. Red and yellow are around 2.0V, green blue and white around 3.0V to 3.4V. A resistor calculated for red run on a blue LED gives a dim output; one calculated for blue run on red overdrives it.",
+            "Reversed polarity does not light and does not obviously fail. The longer leg is the anode. A flat on the rim marks the cathode.",
+            "Continuous current above 20mA shortens life even where the LED still lights. Most GPIO pins are rated well below what a chain of LEDs draws, and the total across all pins has its own limit that is easy to exceed with a handful of indicators.",
+            "Software PWM produces visible flicker on a loaded processor. Use a hardware PWM pin where the brightness matters.",
+            "Common cathode and common anode packages look identical. On a common anode part every duty cycle is inverted, so a colour request produces its complement and OFF produces full white.",
+            "The three dies have different efficiencies, so equal duty cycles do not produce white. Per channel calibration is needed for accurate colour.",
+            "Three channels on one package share the common leg. Driving all three at full duty puts the sum through it, which is the case a single resistor on the common pin cannot handle. Resistor per channel, not one on the common."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
+        }
+    }
+}

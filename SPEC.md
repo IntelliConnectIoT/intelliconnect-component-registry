@@ -95,6 +95,37 @@ sub-blocks.
 - `accelerator` is `cuda`, `npu`, `gpu`, `dsp`, `cpu` or null. Record the accelerator even
   where the shipped software stack cannot reach it, and say so in the notes
 
+## Vendor verification
+
+An optional `vendor` block on any entry records that the manufacturer or supplier has
+endorsed it. It is independent of `status` and grants nothing.
+
+```json
+"vendor": {
+    "verified": true,
+    "organisation": "Espressif Systems",
+    "domain": "espressif.com",
+    "date": "2026-08-09",
+    "evidence_url": "https://espressif.com/registry-endorsements/esp32-s3-devkitc-1",
+    "scope": ["specifications", "harness"],
+    "statement": "Specifications confirmed against the production datasheet."
+}
+```
+
+- A vendor stamp never changes `status` and never makes an entry provisionable. Only
+  hardware verification by a named person does that
+- `verified: true` requires `organisation`, `domain`, `date`, `evidence_url` and a
+  non-empty `scope`
+- `evidence_url` must be https and must resolve on `domain` or a subdomain of it. The
+  proof lives on the vendor's own infrastructure, so an endorsement cannot be asserted on
+  their behalf
+- `scope` states what was endorsed: `specifications`, `driver`, `harness`. A vendor
+  confirming a datasheet has not thereby confirmed a driver
+- Where `verified` is false, every other field must be empty
+
+A vendor may open a merge request against their own products. The domain check is what
+makes the claim verifiable; a maintainer confirms the evidence URL resolves before merge.
+
 ## Absent facts stay null
 
 A field whose value is unknown is `null`, never a plausible default, never an empty string

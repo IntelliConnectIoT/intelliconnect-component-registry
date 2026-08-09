@@ -91,6 +91,19 @@ photograph. The evidence is public and stands in place of the reviewer.
 Submitting a `draft` entry is genuinely useful on its own. Someone else with the component
 can verify it later. Do not mark your own entry verified to get it merged faster.
 
+## Vendors
+
+If you make or supply a component, you can endorse its entry with a `vendor` block. It is
+optional, it grants nothing, and it does not make the entry provisionable.
+
+- Open a merge request against your own product's entry
+- Set `organisation`, `domain`, `date`, `scope` and `evidence_url`
+- `evidence_url` must be https and on your own domain. That page is what proves the
+  endorsement is yours, so it cannot be claimed on your behalf
+- `scope` is what you are actually confirming: `specifications`, `driver`, `harness`
+
+Correcting a wrong specification on your own product is worth more than the stamp.
+
 ## Boards
 
 Board entries carry a `harness` block instead of a `driver` block, and the first question

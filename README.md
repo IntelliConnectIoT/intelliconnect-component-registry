@@ -2,7 +2,7 @@
 
 ![IntelliConnect Component Registry](assets/img/banner.svg)
 
-![Registry version](https://img.shields.io/badge/registry-0.2.0-4D8AFF) ![Schema version](https://img.shields.io/badge/schema-v2-4D8AFF) ![Boards](https://img.shields.io/badge/boards-23-4D8AFF) ![Sensors](https://img.shields.io/badge/sensors-16-4D8AFF) ![Actuators](https://img.shields.io/badge/actuators-5-4D8AFF) ![Verified](https://img.shields.io/badge/verified-0-lightgrey) ![Licence](https://img.shields.io/badge/licence-Apache--2.0-4D8AFF)
+![Registry version](https://img.shields.io/badge/registry-0.3.0-4D8AFF) ![Schema version](https://img.shields.io/badge/schema-v2-4D8AFF) ![Boards](https://img.shields.io/badge/boards-23-4D8AFF) ![Sensors](https://img.shields.io/badge/sensors-16-4D8AFF) ![Actuators](https://img.shields.io/badge/actuators-7-4D8AFF) ![Verified](https://img.shields.io/badge/verified-0-lightgrey) ![Licence](https://img.shields.io/badge/licence-Apache--2.0-4D8AFF)
 
 An open registry of IoT boards, sensors and actuators for developers and agents.
 
@@ -65,14 +65,27 @@ a component.
 | --- | --- | --- |
 | Boards | 23 | 0 |
 | Sensors | 16 | 0 |
-| Actuators | 5 | 0 |
+| Actuators | 7 | 0 |
 
-Nothing is verified yet. Every entry carries real specifications, and 42 of the 44 carry a
+Nothing is verified yet. Every entry carries real specifications, and 44 of the 46 carry a
 full driver or harness block, but none have been signed off against physical hardware by a
 named person. Until an entry reaches `verified` a conforming tool will refuse to
 provision it. Signing entries off is the most useful thing you can contribute, and
 [VERIFYING.md](VERIFYING.md) walks through exactly how, for sensors, actuators and boards.
 You do not need to write any registry code to help, only own the component.
+
+## For vendors
+
+If you make or supply a component, you can endorse its entry with a `vendor` block.
+
+- It is optional and grants nothing. It never changes `status` and never makes an entry
+  provisionable on its own
+- `evidence_url` must be https and resolve on your own domain. That page is the proof, so
+  nobody can claim an endorsement on your behalf
+- `scope` states exactly what you confirmed: `specifications`, `driver` or `harness`
+
+Buyers see who stands behind an entry. Correcting a wrong specification on your own product
+is worth more than the stamp.
 
 ## Hard rules
 

@@ -48,6 +48,25 @@
             "required": ["by", "date", "os"],
             "additionalProperties": false
         },
+        "vendor": {
+            "type": "object",
+            "description": "Manufacturer or supplier endorsement. Independent of status and never a substitute for hardware verification.",
+            "properties": {
+                "verified": { "type": "boolean" },
+                "organisation": { "$ref": "#/$defs/nullableString" },
+                "domain": { "$ref": "#/$defs/nullableString" },
+                "date": { "type": ["string", "null"], "format": "date" },
+                "evidence_url": { "$ref": "#/$defs/url" },
+                "scope": {
+                    "type": "array",
+                    "items": { "enum": ["specifications", "driver", "harness"] },
+                    "uniqueItems": true
+                },
+                "statement": { "$ref": "#/$defs/nullableString" }
+            },
+            "required": ["verified", "organisation", "domain", "date", "evidence_url", "scope"],
+            "additionalProperties": false
+        },
         "pin": {
             "type": "object",
             "properties": {

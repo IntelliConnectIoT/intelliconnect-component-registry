@@ -229,6 +229,42 @@ def validate_status():
                 fail(rel, "flash method '%s' with no tool" % flash.get("method"))
 
 
+def validate_vendor():
+    for directory in KINDS:
+        for path in sorted(glob.glob(os.path.join(ROOT, directory, "*.json"))):
+            rel = os.path.relpath(path, ROOT).replace("\\", "/")
+            vendor = load(path).get("vendor")
+
+            if not vendor:
+                continue
+
+            if not vendor.get("verified"):
+                for field in ("organisation", "domain", "date", "evidence_url"):
+                    if vendor.get(field):
+                        fail(rel, "vendor.%s is set but vendor.verified is false" % field)
+                continue
+
+            for field in ("organisation", "domain", "date", "evidence_url"):
+                if not vendor.get(field):
+                    fail(rel, "vendor.verified is true but vendor.%s is empty" % field)
+
+            if not vendor.get("scope"):
+                fail(rel, "vendor.verified is true but vendor.scope is empty")
+
+            domain = (vendor.get("domain") or "").lower().lstrip(".")
+            evidence = vendor.get("evidence_url") or ""
+
+            if domain and evidence:
+                if not evidence.lower().startswith("https://"):
+                    fail(rel, "vendor.evidence_url must be https")
+
+                host = evidence.split("//", 1)[-1].split("/", 1)[0].lower()
+                host = host.split("@")[-1].split(":")[0]
+
+                if host != domain and not host.endswith("." + domain):
+                    fail(rel, "vendor.evidence_url host '%s' is not on vendor.domain '%s'" % (host, domain))
+
+
 def validate_badges():
     path = os.path.join(ROOT, "README.md")
     if not os.path.exists(path):
@@ -270,6 +306,7 @@ def main():
     validate_index()
     validate_vocabulary()
     validate_status()
+    validate_vendor()
     validate_badges()
 
     total = sum(len(glob.glob(os.path.join(ROOT, d, "*.json"))) for d in KINDS)

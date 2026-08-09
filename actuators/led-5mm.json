@@ -1,0 +1,133 @@
+{
+    "key": "led-5mm",
+    "kind": "actuator",
+    "revision": 1,
+    "status": "draft",
+    "source": "authored",
+    "platform": {
+        "name": "5mm LED",
+        "description": "Single colour through-hole LED driven from one GPIO pin. Requires a series current limiting resistor. Brightness control needs a PWM capable pin.",
+        "actuator_type": "led",
+        "protocol": "gpio",
+        "manufacturer": null,
+        "model_number": "LED-5MM",
+        "datasheet_url": null,
+        "command_topic_suffix": "command/led",
+        "response_topic_suffix": "response/led",
+        "states": [
+            {
+                "command": "ON",
+                "label": "On",
+                "description": "Turn the LED on at full brightness",
+                "payload": "ON",
+                "sort_order": 1,
+                "parameter": null
+            },
+            {
+                "command": "OFF",
+                "label": "Off",
+                "description": "Turn the LED off",
+                "payload": "OFF",
+                "sort_order": 2,
+                "parameter": null
+            },
+            {
+                "command": "SET_BRIGHTNESS",
+                "label": "Set Brightness",
+                "description": "Set brightness by PWM duty cycle. Requires a PWM capable pin",
+                "payload": "SET_BRIGHTNESS",
+                "sort_order": 3,
+                "parameter": {
+                    "name": "brightness",
+                    "data_type": "integer",
+                    "unit_symbol": "%",
+                    "range_min": 0,
+                    "range_max": 100,
+                    "required": true
+                }
+            },
+            {
+                "command": "BLINK",
+                "label": "Blink",
+                "description": "Blink at a fixed interval until another command is issued",
+                "payload": "BLINK",
+                "sort_order": 4,
+                "parameter": {
+                    "name": "interval",
+                    "data_type": "float",
+                    "unit_symbol": "s",
+                    "range_min": 0.1,
+                    "range_max": 60,
+                    "required": true
+                }
+            }
+        ]
+    },
+    "model": {
+        "aliases": [
+            "led",
+            "led-5mm",
+            "indicator-led"
+        ],
+        "device_class": "light"
+    },
+    "driver": {
+        "targets": [
+            "raspberrypi"
+        ],
+        "interface": "gpio-digital",
+        "connection": {
+            "pins": [
+                {
+                    "role": "anode",
+                    "required": true,
+                    "notes": "Series resistor required between the pin and the anode. Size it for the forward voltage of the colour fitted, typically 220R at 3.3V for red and 100R for blue, green or white."
+                },
+                {
+                    "role": "cathode",
+                    "required": true,
+                    "notes": "To ground. Use a PWM capable pin on the anode if brightness control is needed."
+                }
+            ],
+            "supply_voltage": "3.3V or 5V through a series resistor",
+            "level_shift_required": null
+        },
+        "runtime": {
+            "python_module": "drivers.gpio_switch",
+            "pip_packages": [
+                "gpiod"
+            ],
+            "apt_packages": [
+                "python3-libgpiod"
+            ],
+            "init": {
+                "class": "drivers.gpio_switch.GPIOSwitch",
+                "args": {
+                    "chip": "{gpio_chip}",
+                    "line": "{control_pin}",
+                    "active_low": "{active_low}"
+                }
+            }
+        },
+        "constraints": {
+            "min_read_interval_seconds": null,
+            "read_timeout_seconds": null,
+            "warmup_seconds": null
+        },
+        "failure_modes": [
+            "A series resistor is mandatory on every anode. Without one the LED is across the full supply and either the die or the GPIO pin fails, usually within seconds and often silently at first.",
+            "Sizing the resistor needs the forward voltage of that colour, which is not the same across colours. Red and yellow are around 2.0V, green blue and white around 3.0V to 3.4V. A resistor calculated for red run on a blue LED gives a dim output; one calculated for blue run on red overdrives it.",
+            "Reversed polarity does not light and does not obviously fail. The longer leg is the anode. A flat on the rim marks the cathode.",
+            "Continuous current above 20mA shortens life even where the LED still lights. Most GPIO pins are rated well below what a chain of LEDs draws, and the total across all pins has its own limit that is easy to exceed with a handful of indicators.",
+            "Software PWM produces visible flicker on a loaded processor. Use a hardware PWM pin where the brightness matters."
+        ],
+        "verified": {
+            "by": null,
+            "date": null,
+            "board": null,
+            "os": null,
+            "reviewed_by": null,
+            "evidence_url": null
+        }
+    }
+}

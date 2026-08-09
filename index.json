@@ -1,6 +1,6 @@
 {
     "schema_version": 2,
-    "registry_version": "0.2.0",
+    "registry_version": "0.3.0",
     "boards": [
         {
             "key": "raspberry-pi-5-8gb",
@@ -291,6 +291,18 @@
             "key": "pump-5v-mini",
             "name": "5V Mini Submersible Water Pump",
             "protocol": "gpio",
+            "status": "draft"
+        },
+        {
+            "key": "led-5mm",
+            "name": "5mm LED",
+            "protocol": "gpio",
+            "status": "draft"
+        },
+        {
+            "key": "led-rgb-5mm",
+            "name": "5mm RGB LED",
+            "protocol": "pwm",
             "status": "draft"
         }
     ]

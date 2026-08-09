@@ -9,6 +9,7 @@
         "revision": { "type": "integer", "minimum": 1 },
         "status": { "$ref": "common.json#/$defs/status" },
         "source": { "type": "string" },
+        "vendor": { "$ref": "common.json#/$defs/vendor" },
         "blocked_reason": { "$ref": "common.json#/$defs/nullableString" },
         "platform": {
             "type": "object",
